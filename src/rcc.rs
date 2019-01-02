@@ -1,6 +1,6 @@
 use crate::stm32::RCC;
 use crate::stm32::rcc::cfgr::{HPREW, SWW};
-#[cfg(feature = "stm32f1")]
+#[cfg(any(feature = "stm32f0", feature = "stm32f1"))]
 use crate::stm32::rcc::cfgr::PLLSRCW;
 
 use crate::time::Hertz;
@@ -30,7 +30,7 @@ pub struct Rcc {
     pub cfgr: CFGR,
 }
 
-#[cfg(feature = "stm32f1")]
+#[cfg(any(feature = "stm32f0", feature = "stm32f1"))]
 const HSI: u32 = 8_000_000; // Hz
 
 #[cfg(feature = "stm32f4")]
@@ -87,7 +87,7 @@ impl CFGR {
         self
     }
 
-    #[cfg(feature = "stm32f1")]
+    #[cfg(any(feature = "stm32f0", feature = "stm32f1"))]
     fn pll_setup(&self) -> (bool, u32)
     {
         let rcc = unsafe { &*RCC::ptr() };
@@ -160,6 +160,7 @@ impl CFGR {
     }
 
     #[cfg(any(
+        feature = "stm32f0",
         feature = "stm32f101",
         feature = "stm32f102",
         feature = "stm32f103",
@@ -170,7 +171,7 @@ impl CFGR {
     fn flash_setup(sysclk: u32) {
         use crate::stm32::FLASH;
 
-        #[cfg(feature = "stm32f1")]
+        #[cfg(any(feature = "stm32f0", feature = "stm32f1"))]
         let flash_latency_step = 24_000_000;
 
         #[cfg(any(
@@ -214,6 +215,7 @@ impl CFGR {
         let (use_pll, sysclk) = self.pll_setup();
 
         #[cfg(any(
+            feature = "stm32f0",
             feature = "stm32f100",
             feature = "stm32f101",
             feature = "stm32f102",
@@ -255,7 +257,10 @@ impl CFGR {
         #[cfg(feature = "stm32f101")]
         let sysclk_max = 36_000_000;
 
-        #[cfg(feature = "stm32f102")]
+        #[cfg(any(
+            feature = "stm32f0",
+            feature = "stm32f102"
+        ))]
         let sysclk_max = 48_000_000;
 
         #[cfg(any(
@@ -315,6 +320,8 @@ impl CFGR {
         // Calculate real AHB clock
         let hclk = sysclk / hpre_div;
 
+        #[cfg(feature = "stm32f0")]
+        let (pclk1_max, pclk2_max) = (48_000_000, 48_000_000);
         #[cfg(feature = "stm32f1")]
         let (pclk1_max, pclk2_max) = (36_000_000, 72_000_000);
         #[cfg(any(
@@ -359,8 +366,12 @@ impl CFGR {
 
         assert!(pclk1 <= pclk1_max);
 
-        let pclk2 = self.pclk2.unwrap_or_else(|| core::cmp::min(pclk2_max, hclk));
-        let (ppre2_bits, ppre2) = match (hclk + pclk2 - 1) / pclk2 {
+        #[cfg(feature = "stm32f0")]
+        let ppre2 = ppre1;
+
+        let _pclk2 = self.pclk2.unwrap_or_else(|| core::cmp::min(pclk2_max, hclk));
+        #[cfg(any(feature = "stm32f1", feature = "stm32f4"))]
+        let (ppre2_bits, ppre2) = match (hclk + _pclk2 - 1) / _pclk2 {
             0 => unreachable!(),
             1 => (0b000, 1),
             2 => (0b100, 2),
@@ -392,11 +403,11 @@ impl CFGR {
 
         // Set scaling factors and select system clock source
         rcc.cfgr.modify(|_, w| unsafe {
-            w.ppre2()
-                .bits(ppre2_bits)
-                .ppre1()
-                .bits(ppre1_bits)
-                .hpre()
+            #[cfg(feature = "stm32f0")]
+            let w = w.ppre().bits(ppre1_bits);
+            #[cfg(any(feature = "stm32f1", feature = "stm32f4"))]
+            let w = w.ppre2().bits(ppre2_bits).ppre1().bits(ppre1_bits);
+            w.hpre()
                 .variant(hpre_bits)
                 .sw()
                 .variant(if use_pll {
