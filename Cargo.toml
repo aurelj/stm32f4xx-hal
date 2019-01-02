@@ -29,6 +29,10 @@ cortex-m = ">=0.5.8,<0.7"
 cortex-m-rt = "0.6.8"
 nb = "0.1.2"
 
+[dependencies.stm32f0]
+version = "0.7.0"
+optional = true
+
 [dependencies.stm32f1]
 version = "0.7.0"
 optional = true
@@ -55,8 +59,13 @@ version = "0.2.2"
 
 [features]
 device-selected = []
+stm32f0-rt = ["stm32f0/rt"]
 stm32f1-rt = ["stm32f1/rt"]
 stm32f4-rt = ["stm32f4/rt"]
+stm32f0x0 = ["stm32f0/stm32f0x0", "device-selected"]
+stm32f0x1 = ["stm32f0/stm32f0x1", "device-selected"]
+stm32f0x2 = ["stm32f0/stm32f0x2", "device-selected"]
+stm32f0x8 = ["stm32f0/stm32f0x8", "device-selected"]
 stm32f100 = ["stm32f1/stm32f100", "device-selected"]
 stm32f101 = ["stm32f1/stm32f101", "device-selected"]
 stm32f102 = ["stm32f1/stm32f102", "device-selected"]
