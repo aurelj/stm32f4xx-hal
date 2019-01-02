@@ -28,9 +28,9 @@ def main():
 
     crate_info = cargo_meta["packages"][0]
 
-    features = ["{},rt".format(x)
+    features = ["{},{}-rt".format(x, x[:7])
             for x in crate_info["features"].keys()
-            if x != "device-selected" and x != "rt"]
+            if x != "device-selected" and not x.endswith("-rt")]
 
     if 'size_check' in sys.argv:
         cargo_cmd = ['cargo', 'build', '--release']

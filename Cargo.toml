@@ -28,7 +28,14 @@ features = ["stm32f429", "rt"]
 cortex-m = ">=0.5.8,<0.7"
 cortex-m-rt = "0.6.8"
 nb = "0.1.2"
-stm32f4 = "0.7.0"
+
+[dependencies.stm32f1]
+version = "0.7.0"
+optional = true
+
+[dependencies.stm32f4]
+version = "0.7.0"
+optional = true
 
 [dependencies.bare-metal]
 version = "0.2.4"
@@ -48,7 +55,14 @@ version = "0.2.2"
 
 [features]
 device-selected = []
-rt = ["stm32f4/rt"]
+stm32f1-rt = ["stm32f1/rt"]
+stm32f4-rt = ["stm32f4/rt"]
+stm32f100 = ["stm32f1/stm32f100", "device-selected"]
+stm32f101 = ["stm32f1/stm32f101", "device-selected"]
+stm32f102 = ["stm32f1/stm32f102", "device-selected"]
+stm32f103 = ["stm32f1/stm32f103", "device-selected"]
+stm32f105 = ["stm32f1/stm32f107", "device-selected"]
+stm32f107 = ["stm32f1/stm32f107", "device-selected"]
 stm32f401 = ["stm32f4/stm32f401", "device-selected"]
 stm32f405 = ["stm32f4/stm32f405", "device-selected"]
 stm32f407 = ["stm32f4/stm32f407", "device-selected"]

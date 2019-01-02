@@ -3,6 +3,12 @@
 
 #[cfg(not(feature = "device-selected"))]
 compile_error!("This crate requires one of the following device features enabled:
+        stm32f100
+        stm32f101
+        stm32f102
+        stm32f103
+        stm32f105
+        stm32f107
         stm32f401
         stm32f405
         stm32f407
@@ -25,6 +31,24 @@ pub use embedded_hal as hal;
 
 pub use nb;
 pub use nb::block;
+
+#[cfg(feature = "stm32f100")]
+pub use stm32f1::stm32f100 as stm32;
+
+#[cfg(feature = "stm32f101")]
+pub use stm32f1::stm32f101 as stm32;
+
+#[cfg(feature = "stm32f102")]
+pub use stm32f1::stm32f102 as stm32;
+
+#[cfg(feature = "stm32f103")]
+pub use stm32f1::stm32f103 as stm32;
+
+#[cfg(feature = "stm32f105")]
+pub use stm32f1::stm32f107 as stm32;
+
+#[cfg(feature = "stm32f107")]
+pub use stm32f1::stm32f107 as stm32;
 
 #[cfg(feature = "stm32f401")]
 pub use stm32f4::stm32f401 as stm32;
@@ -78,7 +102,10 @@ pub use stm32f4::stm32f469 as stm32;
 pub use stm32f4::stm32f469 as stm32;
 
 // Enable use of interrupt macro
-#[cfg(feature = "rt")]
+#[cfg(any(
+    feature = "stm32f1-rt",
+    feature = "stm32f4-rt",
+))]
 pub use crate::stm32::interrupt;
 
 #[cfg(feature = "stm32f4")]
