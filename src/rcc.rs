@@ -1,5 +1,7 @@
 use crate::stm32::RCC;
 use crate::stm32::rcc::cfgr::{HPREW, SWW};
+#[cfg(feature = "stm32f1")]
+use crate::stm32::rcc::cfgr::PLLSRCW;
 
 use crate::time::Hertz;
 
@@ -28,6 +30,10 @@ pub struct Rcc {
     pub cfgr: CFGR,
 }
 
+#[cfg(feature = "stm32f1")]
+const HSI: u32 = 8_000_000; // Hz
+
+#[cfg(feature = "stm32f4")]
 const HSI: u32 = 16_000_000; // Hz
 
 pub struct CFGR {
@@ -81,6 +87,33 @@ impl CFGR {
         self
     }
 
+    #[cfg(feature = "stm32f1")]
+    fn pll_setup(&self) -> (bool, u32)
+    {
+        let rcc = unsafe { &*RCC::ptr() };
+
+        let pllsrcclk = self.hse.unwrap_or(HSI / 2);
+
+        let pllmul = self.sysclk.unwrap_or(pllsrcclk) / pllsrcclk;
+        let pllmul = core::cmp::min(core::cmp::max(1, pllmul), 16);
+
+        if pllmul > 1 {
+            rcc.cfgr.modify(|_, w| unsafe {
+                w.pllmul()
+                    .bits(pllmul as u8 - 2)
+                    .pllsrc()
+                    .variant(match self.hse {
+                        Some(_) => PLLSRCW::HSE_DIV_PREDIV,
+                        None => PLLSRCW::HSI_DIV2,
+                    })
+            });
+            (true, pllsrcclk * pllmul)
+        } else {
+            (false, self.hse.unwrap_or(HSI))
+        }
+    }
+
+    #[cfg(feature = "stm32f4")]
     fn pll_setup(&self) -> (bool, u32)
     {
         let rcc = unsafe { &*RCC::ptr() };
@@ -126,8 +159,19 @@ impl CFGR {
         }
     }
 
+    #[cfg(any(
+        feature = "stm32f101",
+        feature = "stm32f102",
+        feature = "stm32f103",
+        feature = "stm32f105",
+        feature = "stm32f107",
+        feature = "stm32f4"
+    ))]
     fn flash_setup(sysclk: u32) {
         use crate::stm32::FLASH;
+
+        #[cfg(feature = "stm32f1")]
+        let flash_latency_step = 24_000_000;
 
         #[cfg(any(
             feature = "stm32f401",
@@ -160,10 +204,27 @@ impl CFGR {
         }
     }
 
+    #[cfg(feature = "stm32f100")]
+    fn flash_setup(_sysclk: u32) {
+    }
+
     pub fn freeze(self) -> Clocks {
         let rcc = unsafe { &*RCC::ptr() };
 
         let (use_pll, sysclk) = self.pll_setup();
+
+        #[cfg(any(
+            feature = "stm32f100",
+            feature = "stm32f101",
+            feature = "stm32f102",
+            feature = "stm32f103"
+        ))]
+        let sysclk_min = 16_000_000;
+        #[cfg(any(
+            feature = "stm32f105",
+            feature = "stm32f107"
+        ))]
+        let sysclk_min = 18_000_000;
 
         #[cfg(any(
             feature = "stm32f401",
@@ -187,6 +248,22 @@ impl CFGR {
 
         #[cfg(any(feature = "stm32f446"))]
         let sysclk_min = 12_500_000;
+
+        #[cfg(feature = "stm32f100")]
+        let sysclk_max = 24_000_000;
+
+        #[cfg(feature = "stm32f101")]
+        let sysclk_max = 36_000_000;
+
+        #[cfg(feature = "stm32f102")]
+        let sysclk_max = 48_000_000;
+
+        #[cfg(any(
+            feature = "stm32f103",
+            feature = "stm32f105",
+            feature = "stm32f107"
+        ))]
+        let sysclk_max = 72_000_000;
 
         #[cfg(feature = "stm32f401")]
         let sysclk_max = 84_000_000;
@@ -238,6 +315,8 @@ impl CFGR {
         // Calculate real AHB clock
         let hclk = sysclk / hpre_div;
 
+        #[cfg(feature = "stm32f1")]
+        let (pclk1_max, pclk2_max) = (36_000_000, 72_000_000);
         #[cfg(any(
             feature = "stm32f401",
             feature = "stm32f405",
