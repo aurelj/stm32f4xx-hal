@@ -33,7 +33,7 @@ pub struct Rcc {
 #[cfg(any(feature = "stm32f0", feature = "stm32f1"))]
 const HSI: u32 = 8_000_000; // Hz
 
-#[cfg(feature = "stm32f4")]
+#[cfg(any(feature = "stm32f2", feature = "stm32f4"))]
 const HSI: u32 = 16_000_000; // Hz
 
 pub struct CFGR {
@@ -113,7 +113,7 @@ impl CFGR {
         }
     }
 
-    #[cfg(feature = "stm32f4")]
+    #[cfg(any(feature = "stm32f2", feature = "stm32f4"))]
     fn pll_setup(&self) -> (bool, u32)
     {
         let rcc = unsafe { &*RCC::ptr() };
@@ -131,7 +131,7 @@ impl CFGR {
         let vco_in = pllsrcclk / pllm;
         assert!(vco_in >= 1_000_000 && vco_in <= 2_000_000);
 
-        // Main scaler, must result in >= 100MHz (>= 192MHz for F401)
+        // Main scaler, must result in >= 100MHz (>= 192MHz for F401, >= 64MHz for F2)
         // and <= 432MHz, min 50, max 432
         let plln = sysclk * sysclk_div / vco_in;
 
@@ -166,6 +166,7 @@ impl CFGR {
         feature = "stm32f103",
         feature = "stm32f105",
         feature = "stm32f107",
+        feature = "stm32f2",
         feature = "stm32f4"
     ))]
     fn flash_setup(sysclk: u32) {
@@ -175,6 +176,7 @@ impl CFGR {
         let flash_latency_step = 24_000_000;
 
         #[cfg(any(
+            feature = "stm32f2",
             feature = "stm32f401",
             feature = "stm32f405",
             feature = "stm32f407",
@@ -229,6 +231,7 @@ impl CFGR {
         let sysclk_min = 18_000_000;
 
         #[cfg(any(
+            feature = "stm32f2",
             feature = "stm32f401",
             feature = "stm32f405",
             feature = "stm32f407",
@@ -272,6 +275,9 @@ impl CFGR {
 
         #[cfg(feature = "stm32f401")]
         let sysclk_max = 84_000_000;
+
+        #[cfg(feature = "stm32f2")]
+        let sysclk_max = 120_000_000;
 
         #[cfg(any(
             feature = "stm32f405",
@@ -324,6 +330,8 @@ impl CFGR {
         let (pclk1_max, pclk2_max) = (48_000_000, 48_000_000);
         #[cfg(feature = "stm32f1")]
         let (pclk1_max, pclk2_max) = (36_000_000, 72_000_000);
+        #[cfg(feature = "stm32f2")]
+        let (pclk1_max, pclk2_max) = (30_000_000, 60_000_000);
         #[cfg(any(
             feature = "stm32f401",
             feature = "stm32f405",
@@ -370,7 +378,7 @@ impl CFGR {
         let ppre2 = ppre1;
 
         let _pclk2 = self.pclk2.unwrap_or_else(|| core::cmp::min(pclk2_max, hclk));
-        #[cfg(any(feature = "stm32f1", feature = "stm32f4"))]
+        #[cfg(any(feature = "stm32f1", feature = "stm32f2", feature = "stm32f4"))]
         let (ppre2_bits, ppre2) = match (hclk + _pclk2 - 1) / _pclk2 {
             0 => unreachable!(),
             1 => (0b000, 1),
@@ -405,7 +413,7 @@ impl CFGR {
         rcc.cfgr.modify(|_, w| unsafe {
             #[cfg(feature = "stm32f0")]
             let w = w.ppre().bits(ppre1_bits);
-            #[cfg(any(feature = "stm32f1", feature = "stm32f4"))]
+            #[cfg(any(feature = "stm32f1", feature = "stm32f2", feature = "stm32f4"))]
             let w = w.ppre2().bits(ppre2_bits).ppre1().bits(ppre1_bits);
             w.hpre()
                 .variant(hpre_bits)
