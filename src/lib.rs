@@ -13,6 +13,10 @@ compile_error!("This crate requires one of the following device features enabled
         stm32f103
         stm32f105
         stm32f107
+        stm32f205
+        stm32f207
+        stm32f215
+        stm32f217
         stm32f401
         stm32f405
         stm32f407
@@ -65,6 +69,18 @@ pub use stm32f1::stm32f107 as stm32;
 
 #[cfg(feature = "stm32f107")]
 pub use stm32f1::stm32f107 as stm32;
+
+#[cfg(feature = "stm32f205")]
+pub use stm32f2::stm32f215 as stm32;
+
+#[cfg(feature = "stm32f207")]
+pub use stm32f2::stm32f217 as stm32;
+
+#[cfg(feature = "stm32f215")]
+pub use stm32f2::stm32f215 as stm32;
+
+#[cfg(feature = "stm32f217")]
+pub use stm32f2::stm32f217 as stm32;
 
 #[cfg(feature = "stm32f401")]
 pub use stm32f4::stm32f401 as stm32;
@@ -121,6 +137,7 @@ pub use stm32f4::stm32f469 as stm32;
 #[cfg(any(
     feature = "stm32f0-rt",
     feature = "stm32f1-rt",
+    feature = "stm32f2-rt",
     feature = "stm32f4-rt",
 ))]
 pub use crate::stm32::interrupt;

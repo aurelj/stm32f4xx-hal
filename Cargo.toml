@@ -37,6 +37,10 @@ optional = true
 version = "0.7.0"
 optional = true
 
+[dependencies.stm32f2]
+version = "0.7.0"
+optional = true
+
 [dependencies.stm32f4]
 version = "0.7.0"
 optional = true
@@ -61,6 +65,7 @@ version = "0.2.2"
 device-selected = []
 stm32f0-rt = ["stm32f0/rt"]
 stm32f1-rt = ["stm32f1/rt"]
+stm32f2-rt = ["stm32f2/rt"]
 stm32f4-rt = ["stm32f4/rt"]
 stm32f0x0 = ["stm32f0/stm32f0x0", "device-selected"]
 stm32f0x1 = ["stm32f0/stm32f0x1", "device-selected"]
@@ -72,6 +77,10 @@ stm32f102 = ["stm32f1/stm32f102", "device-selected"]
 stm32f103 = ["stm32f1/stm32f103", "device-selected"]
 stm32f105 = ["stm32f1/stm32f107", "device-selected"]
 stm32f107 = ["stm32f1/stm32f107", "device-selected"]
+stm32f205 = ["stm32f2/stm32f215", "device-selected"]
+stm32f207 = ["stm32f2/stm32f217", "device-selected"]
+stm32f215 = ["stm32f2/stm32f215", "device-selected"]
+stm32f217 = ["stm32f2/stm32f217", "device-selected"]
 stm32f401 = ["stm32f4/stm32f401", "device-selected"]
 stm32f405 = ["stm32f4/stm32f405", "device-selected"]
 stm32f407 = ["stm32f4/stm32f407", "device-selected"]
