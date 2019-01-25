@@ -145,7 +145,7 @@ pub mod serial;
 pub mod spi;
 #[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f4"))]
 pub mod time;
-#[cfg(any(feature = "stm32f1", feature = "stm32f4"))]
+#[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f4"))]
 pub mod timer;
 #[cfg(any(feature = "stm32f1", feature = "stm32f4"))]
 pub mod qei;
