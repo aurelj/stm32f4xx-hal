@@ -87,7 +87,7 @@ pub trait ExtiPin {
 }
 
 macro_rules! gpio {
-    ($GPIOX:ident, $gpiox:ident, $iopxenr:ident, $PXx:ident, $extigpionr:expr, [
+    ($GPIOX:ident, $gpiox:ident, $iopxenr:ident, $gpioxenr:ident, $PXx:ident, $extigpionr:expr, [
         $($PXi:ident: ($pxi:ident, $i:expr, $MODE:ty, $exticri:ident),)+
     ]) => {
         /// GPIO
@@ -118,7 +118,10 @@ macro_rules! gpio {
                 fn split(self) -> Parts {
                     // NOTE(unsafe) This executes only during initialisation
                     let rcc = unsafe { &(*RCC::ptr()) };
-                    rcc.ahb1enr.modify(|_, w| w.$iopxenr().set_bit());
+                    #[cfg(feature = "stm32f0")]
+                    rcc.ahbenr.modify(|_, w| w.$iopxenr().set_bit());
+                    #[cfg(feature = "stm32f4")]
+                    rcc.ahb1enr.modify(|_, w| w.$gpioxenr().set_bit());
 
                     Parts {
                         $(
@@ -656,6 +659,7 @@ macro_rules! gpio {
 }
 
 #[cfg(any(
+    feature = "stm32f0",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -674,7 +678,7 @@ macro_rules! gpio {
     feature = "stm32f469",
     feature = "stm32f479"
 ))]
-gpio!(GPIOA, gpioa, gpioaen, PA, 0, [
+gpio!(GPIOA, gpioa, iopaen, gpioaen, PA, 0, [
     PA0: (pa0, 0, Input<Floating>, exticr1),
     PA1: (pa1, 1, Input<Floating>, exticr1),
     PA2: (pa2, 2, Input<Floating>, exticr1),
@@ -694,6 +698,7 @@ gpio!(GPIOA, gpioa, gpioaen, PA, 0, [
 ]);
 
 #[cfg(any(
+    feature = "stm32f0",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -712,7 +717,7 @@ gpio!(GPIOA, gpioa, gpioaen, PA, 0, [
     feature = "stm32f469",
     feature = "stm32f479"
 ))]
-gpio!(GPIOB, gpiob, gpioben, PB, 1, [
+gpio!(GPIOB, gpiob, iopben, gpioben, PB, 1, [
     PB0: (pb0, 0, Input<Floating>, exticr1),
     PB1: (pb1, 1, Input<Floating>, exticr1),
     PB2: (pb2, 2, Input<Floating>, exticr1),
@@ -732,6 +737,7 @@ gpio!(GPIOB, gpiob, gpioben, PB, 1, [
 ]);
 
 #[cfg(any(
+    feature = "stm32f0",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -750,7 +756,7 @@ gpio!(GPIOB, gpiob, gpioben, PB, 1, [
     feature = "stm32f469",
     feature = "stm32f479"
 ))]
-gpio!(GPIOC, gpioc, gpiocen, PC, 2, [
+gpio!(GPIOC, gpioc, iopcen, gpiocen, PC, 2, [
     PC0: (pc0, 0, Input<Floating>, exticr1),
     PC1: (pc1, 1, Input<Floating>, exticr1),
     PC2: (pc2, 2, Input<Floating>, exticr1),
@@ -770,6 +776,7 @@ gpio!(GPIOC, gpioc, gpiocen, PC, 2, [
 ]);
 
 #[cfg(any(
+    feature = "stm32f0",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -787,7 +794,7 @@ gpio!(GPIOC, gpioc, gpiocen, PC, 2, [
     feature = "stm32f469",
     feature = "stm32f479"
 ))]
-gpio!(GPIOD, gpiod, gpioden, PD, 3, [
+gpio!(GPIOD, gpiod, iopden, gpioden, PD, 3, [
     PD0: (pd0, 0, Input<Floating>, exticr1),
     PD1: (pd1, 1, Input<Floating>, exticr1),
     PD2: (pd2, 2, Input<Floating>, exticr1),
@@ -807,6 +814,9 @@ gpio!(GPIOD, gpiod, gpioden, PD, 3, [
 ]);
 
 #[cfg(any(
+    feature = "stm32f0x1",
+    feature = "stm32f0x2",
+    feature = "stm32f0x8",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -824,7 +834,7 @@ gpio!(GPIOD, gpiod, gpioden, PD, 3, [
     feature = "stm32f469",
     feature = "stm32f479"
 ))]
-gpio!(GPIOE, gpioe, gpioeen, PE, 4, [
+gpio!(GPIOE, gpioe, iopeen, gpioeen, PE, 4, [
     PE0: (pe0, 0, Input<Floating>, exticr1),
     PE1: (pe1, 1, Input<Floating>, exticr1),
     PE2: (pe2, 2, Input<Floating>, exticr1),
@@ -844,6 +854,7 @@ gpio!(GPIOE, gpioe, gpioeen, PE, 4, [
 ]);
 
 #[cfg(any(
+    feature = "stm32f0",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -859,7 +870,7 @@ gpio!(GPIOE, gpioe, gpioeen, PE, 4, [
     feature = "stm32f469",
     feature = "stm32f479"
 ))]
-gpio!(GPIOF, gpiof, gpiofen, PF, 5, [
+gpio!(GPIOF, gpiof, iopfen, gpiofen, PF, 5, [
     PF0: (pf0, 0, Input<Floating>, exticr1),
     PF1: (pf1, 1, Input<Floating>, exticr1),
     PF2: (pf2, 2, Input<Floating>, exticr1),
@@ -894,7 +905,7 @@ gpio!(GPIOF, gpiof, gpiofen, PF, 5, [
     feature = "stm32f469",
     feature = "stm32f479"
 ))]
-gpio!(GPIOG, gpiog, gpiogen, PG, 6, [
+gpio!(GPIOG, gpiog, iopgen, gpiogen, PG, 6, [
     PG0: (pg0, 0, Input<Floating>, exticr1),
     PG1: (pg1, 1, Input<Floating>, exticr1),
     PG2: (pg2, 2, Input<Floating>, exticr1),
@@ -931,7 +942,7 @@ gpio!(GPIOG, gpiog, gpiogen, PG, 6, [
     feature = "stm32f469",
     feature = "stm32f479"
 ))]
-gpio!(GPIOH, gpioh, gpiohen, PH, 7, [
+gpio!(GPIOH, gpioh, iophen, gpiohen, PH, 7, [
     PH0: (ph0, 0, Input<Floating>, exticr1),
     PH1: (ph1, 1, Input<Floating>, exticr1),
     PH2: (ph2, 2, Input<Floating>, exticr1),
@@ -951,7 +962,7 @@ gpio!(GPIOH, gpioh, gpiohen, PH, 7, [
 ]);
 
 #[cfg(any(feature = "stm32f401"))]
-gpio!(GPIOH, gpioh, gpiohen, PH, 7, [
+gpio!(GPIOH, gpioh, iophen, gpiohen, PH, 7, [
     PH0: (ph0, 0, Input<Floating>, exticr1),
     PH1: (ph1, 1, Input<Floating>, exticr1),
 ]);
@@ -968,7 +979,7 @@ gpio!(GPIOH, gpioh, gpiohen, PH, 7, [
     feature = "stm32f469",
     feature = "stm32f479"
 ))]
-gpio!(GPIOI, gpioi, gpioien, PI, 8, [
+gpio!(GPIOI, gpioi, iopien, gpioien, PI, 8, [
     PI0: (pi0, 0, Input<Floating>, exticr1),
     PI1: (pi1, 1, Input<Floating>, exticr1),
     PI2: (pi2, 2, Input<Floating>, exticr1),
@@ -995,7 +1006,7 @@ gpio!(GPIOI, gpioi, gpioien, PI, 8, [
     feature = "stm32f469",
     feature = "stm32f479"
 ))]
-gpio!(GPIOJ, gpioj, gpiojen, PJ, 9, [
+gpio!(GPIOJ, gpioj, iopjen, gpiojen, PJ, 9, [
     PJ0: (pj0, 0, Input<Floating>, exticr1),
     PJ1: (pj1, 1, Input<Floating>, exticr1),
     PJ2: (pj2, 2, Input<Floating>, exticr1),
@@ -1022,7 +1033,7 @@ gpio!(GPIOJ, gpioj, gpiojen, PJ, 9, [
     feature = "stm32f469",
     feature = "stm32f479"
 ))]
-gpio!(GPIOK, gpiok, gpioken, PK, 10, [
+gpio!(GPIOK, gpiok, iopken, gpioken, PK, 10, [
     PK0: (pk0, 0, Input<Floating>, exticr1),
     PK1: (pk1, 1, Input<Floating>, exticr1),
     PK2: (pk2, 2, Input<Floating>, exticr1),
