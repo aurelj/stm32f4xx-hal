@@ -120,7 +120,7 @@ macro_rules! gpio {
                     let rcc = unsafe { &(*RCC::ptr()) };
                     #[cfg(feature = "stm32f0")]
                     rcc.ahbenr.modify(|_, w| w.$iopxenr().set_bit());
-                    #[cfg(feature = "stm32f4")]
+                    #[cfg(any(feature = "stm32f2", feature = "stm32f4"))]
                     rcc.ahb1enr.modify(|_, w| w.$gpioxenr().set_bit());
 
                     Parts {
@@ -660,6 +660,7 @@ macro_rules! gpio {
 
 #[cfg(any(
     feature = "stm32f0",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -699,6 +700,7 @@ gpio!(GPIOA, gpioa, iopaen, gpioaen, PA, 0, [
 
 #[cfg(any(
     feature = "stm32f0",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -738,6 +740,7 @@ gpio!(GPIOB, gpiob, iopben, gpioben, PB, 1, [
 
 #[cfg(any(
     feature = "stm32f0",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -777,6 +780,7 @@ gpio!(GPIOC, gpioc, iopcen, gpiocen, PC, 2, [
 
 #[cfg(any(
     feature = "stm32f0",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -817,6 +821,7 @@ gpio!(GPIOD, gpiod, iopden, gpioden, PD, 3, [
     feature = "stm32f0x1",
     feature = "stm32f0x2",
     feature = "stm32f0x8",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -855,6 +860,7 @@ gpio!(GPIOE, gpioe, iopeen, gpioeen, PE, 4, [
 
 #[cfg(any(
     feature = "stm32f0",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -890,6 +896,7 @@ gpio!(GPIOF, gpiof, iopfen, gpiofen, PF, 5, [
 ]);
 
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -925,6 +932,7 @@ gpio!(GPIOG, gpiog, iopgen, gpiogen, PG, 6, [
 ]);
 
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f410",
@@ -968,6 +976,7 @@ gpio!(GPIOH, gpioh, iophen, gpiohen, PH, 7, [
 ]);
 
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f415",
