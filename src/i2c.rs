@@ -3,6 +3,7 @@ use core::ops::Deref;
 use crate::stm32::i2c1;
 
 #[cfg(any(
+    feature = "stm32f1",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -84,6 +85,7 @@ use crate::gpio::gpiob::PB3;
 ))]
 use crate::gpio::gpiob::PB4;
 #[cfg(any(
+    feature = "stm32f1",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -104,6 +106,7 @@ use crate::gpio::gpiob::PB4;
 ))]
 use crate::gpio::gpiob::{PB6, PB7, PB8, PB9, PB10};
 #[cfg(any(
+    feature = "stm32f1",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f410",
@@ -179,7 +182,11 @@ use crate::gpio::gpiof::{PF0, PF1};
 ))]
 use crate::gpio::gpioh::{PH4, PH5, PH7, PH8};
 
-use crate::gpio::{Alternate, AF4};
+use crate::gpio::Alternate;
+#[cfg(feature = "stm32f1")]
+use crate::gpio::OpenDrain;
+#[cfg(feature = "stm32f4")]
+use crate::gpio::AF4;
 #[cfg(any(
     feature = "stm32f401",
     feature = "stm32f410",
@@ -209,6 +216,8 @@ where
     SDA: PinSda<I2c>,
 {}
 
+#[cfg(feature = "stm32f1")]
+impl PinScl<I2C1> for PB6<Alternate<OpenDrain>> {}
 #[cfg(any(
     feature = "stm32f401",
     feature = "stm32f405",
@@ -229,6 +238,8 @@ where
     feature = "stm32f479"
 ))]
 impl PinScl<I2C1> for PB6<Alternate<AF4>> {}
+#[cfg(feature = "stm32f1")]
+impl PinSda<I2C1> for PB7<Alternate<OpenDrain>> {}
 #[cfg(any(
     feature = "stm32f401",
     feature = "stm32f405",
@@ -249,6 +260,8 @@ impl PinScl<I2C1> for PB6<Alternate<AF4>> {}
     feature = "stm32f479"
 ))]
 impl PinSda<I2C1> for PB7<Alternate<AF4>> {}
+#[cfg(feature = "stm32f1")]
+impl PinScl<I2C1> for PB8<Alternate<OpenDrain>> {}
 #[cfg(any(
     feature = "stm32f401",
     feature = "stm32f405",
@@ -269,6 +282,8 @@ impl PinSda<I2C1> for PB7<Alternate<AF4>> {}
     feature = "stm32f479"
 ))]
 impl PinScl<I2C1> for PB8<Alternate<AF4>> {}
+#[cfg(feature = "stm32f1")]
+impl PinSda<I2C1> for PB9<Alternate<OpenDrain>> {}
 #[cfg(any(
     feature = "stm32f401",
     feature = "stm32f405",
@@ -311,6 +326,8 @@ impl PinSda<I2C2> for PB3<Alternate<AF9>> {}
     feature = "stm32f423"
 ))]
 impl PinSda<I2C2> for PB9<Alternate<AF9>> {}
+#[cfg(feature = "stm32f1")]
+impl PinScl<I2C2> for PB10<Alternate<OpenDrain>> {}
 #[cfg(any(
     feature = "stm32f401",
     feature = "stm32f405",
@@ -331,6 +348,8 @@ impl PinSda<I2C2> for PB9<Alternate<AF9>> {}
     feature = "stm32f479"
 ))]
 impl PinScl<I2C2> for PB10<Alternate<AF4>> {}
+#[cfg(feature = "stm32f1")]
+impl PinSda<I2C2> for PB11<Alternate<OpenDrain>> {}
 #[cfg(any(
     feature = "stm32f405",
     feature = "stm32f407",
@@ -506,6 +525,7 @@ pub enum Error {
 }
 
 #[cfg(any(
+    feature = "stm32f1",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -546,6 +566,7 @@ impl<PINS> I2c<I2C1, PINS> {
 }
 
 #[cfg(any(
+    feature = "stm32f1",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
