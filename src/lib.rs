@@ -135,7 +135,11 @@ pub use crate::gpio_v1 as gpio;
 pub mod gpio;
 #[cfg(any(feature = "stm32f1", feature = "stm32f4"))]
 pub mod i2c;
-#[cfg(any(feature = "stm32f1", feature = "stm32f4"))]
+#[cfg(feature = "stm32f0")]
+pub mod i2c_v2;
+#[cfg(feature = "stm32f0")]
+pub use crate::i2c_v2 as i2c;
+#[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f4"))]
 pub mod prelude;
 #[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f4"))]
 pub mod rcc;
