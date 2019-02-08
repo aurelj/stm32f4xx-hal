@@ -6,6 +6,7 @@ pub use embedded_hal::spi::{Mode, Phase, Polarity};
 use nb;
 
 #[cfg(any(
+    feature = "stm32f0",
     feature = "stm32f1",
     feature = "stm32f401",
     feature = "stm32f405",
@@ -118,6 +119,7 @@ use crate::gpio::gpioa::{PA1, PA11};
 ))]
 use crate::gpio::gpioa::{PA10, PA12};
 #[cfg(any(
+    feature = "stm32f0",
     feature = "stm32f1",
     feature = "stm32f401",
     feature = "stm32f405",
@@ -166,6 +168,7 @@ use crate::gpio::gpiob::PB2;
 ))]
 use crate::gpio::gpiob::PB8;
 #[cfg(any(
+    feature = "stm32f0",
     feature = "stm32f1",
     feature = "stm32f401",
     feature = "stm32f405",
@@ -187,6 +190,7 @@ use crate::gpio::gpiob::PB8;
 ))]
 use crate::gpio::gpiob::{PB13, PB14, PB15, PB3, PB4, PB5};
 #[cfg(any(
+    feature = "stm32f0",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -244,6 +248,7 @@ use crate::gpio::gpioc::PC7;
 ))]
 use crate::gpio::gpioc::{PC10, PC11, PC12};
 #[cfg(any(
+    feature = "stm32f0",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -266,6 +271,12 @@ use crate::gpio::gpioc::{PC2, PC3};
 
 #[cfg(any(feature = "stm32f446"))]
 use crate::gpio::gpiod::PD0;
+#[cfg(any(
+    feature = "stm32f0x1",
+    feature = "stm32f0x2",
+    feature = "stm32f0x8"
+))]
+use crate::gpio::gpiod::{PD1, PD3, PD4};
 #[cfg(any(
     feature = "stm32f401",
     feature = "stm32f411",
@@ -297,6 +308,12 @@ use crate::gpio::gpiod::{PD3, PD6};
     feature = "stm32f479"
 ))]
 use crate::gpio::gpioe::{PE12, PE13, PE14, PE2, PE5, PE6};
+#[cfg(any(
+    feature = "stm32f0x1",
+    feature = "stm32f0x2",
+    feature = "stm32f0x8"
+))]
+use crate::gpio::gpioe::{PE13, PE14, PE15};
 
 #[cfg(any(
     feature = "stm32f427",
@@ -354,6 +371,8 @@ use crate::gpio::gpioh::{PH6, PH7};
 ))]
 use crate::gpio::gpioi::{PI1, PI2, PI3};
 
+#[cfg(feature = "stm32f0")]
+use crate::gpio::{AF0, AF1, AF5};
 #[cfg(any(
     feature = "stm32f401",
     feature = "stm32f405",
@@ -383,6 +402,7 @@ use crate::gpio::{AF5, AF6};
 ))]
 use crate::gpio::AF7;
 #[cfg(any(
+    feature = "stm32f0",
     feature = "stm32f1",
     feature = "stm32f401",
     feature = "stm32f405",
@@ -455,6 +475,72 @@ macro_rules! pins {
             )*
         )+
     }
+}
+
+#[cfg(feature = "stm32f0")]
+pins! {
+    SPI1:
+        SCK: [
+            NoSck,
+            PA5<Alternate<AF0>>,
+            PB3<Alternate<AF0>>
+        ]
+        MISO: [
+            NoMiso,
+            PA6<Alternate<AF0>>,
+            PB4<Alternate<AF0>>
+        ]
+        MOSI: [
+            NoMosi,
+            PA7<Alternate<AF0>>,
+            PB5<Alternate<AF0>>
+        ]
+
+    SPI2:
+        SCK: [
+            NoSck,
+            PB10<Alternate<AF5>>,
+            PB13<Alternate<AF0>>
+        ]
+        MISO: [
+            NoMiso,
+            PB14<Alternate<AF0>>,
+            PC2<Alternate<AF1>>
+        ]
+        MOSI: [
+            NoMosi,
+            PB15<Alternate<AF0>>,
+            PC3<Alternate<AF1>>
+        ]
+}
+
+#[cfg(any(
+    feature = "stm32f0x1",
+    feature = "stm32f0x2",
+    feature = "stm32f0x8"
+))]
+pins! {
+    SPI1:
+        SCK: [
+            PE13<Alternate<AF1>>
+        ]
+        MISO: [
+            PE14<Alternate<AF1>>
+        ]
+        MOSI: [
+            PE15<Alternate<AF1>>
+        ]
+
+    SPI2:
+        SCK: [
+            PD1<Alternate<AF1>>
+        ]
+        MISO: [
+            PD3<Alternate<AF1>>
+        ]
+        MOSI: [
+            PD4<Alternate<AF1>>
+        ]
 }
 
 #[cfg(feature = "stm32f1")]
@@ -848,6 +934,7 @@ pub struct Spi<SPI, PINS> {
 }
 
 #[cfg(any(
+    feature = "stm32f0",
     feature = "stm32f1",
     feature = "stm32f401",
     feature = "stm32f405",
@@ -883,6 +970,7 @@ impl<PINS> Spi<SPI1, PINS> {
 }
 
 #[cfg(any(
+    feature = "stm32f0",
     feature = "stm32f100",
     feature = "stm32f101",
     feature = "stm32f103",
@@ -1046,7 +1134,12 @@ where
     pub fn init(self, mode: Mode, freq: Hertz, clock: Hertz) -> Self
     {
         // disable SS output
-        self.spi.cr2.write(|w| w.ssoe().clear_bit());
+        // ds: 8 bit frames
+        self.spi.cr2.write(|w| {
+            #[cfg(feature = "stm32f0")]
+            let w = w.ds().eight_bit();
+            w.ssoe().clear_bit()
+        });
 
         let br = match clock.0 / freq.0 {
             0 => unreachable!(),
@@ -1067,8 +1160,13 @@ where
         // dff: 8 bit frames
         // bidimode: 2-line unidirectional
         // spe: enable the SPI bus
-        self.spi.cr1.write(|w| { w
-            .cpha()
+        self.spi.cr1.write(|w| {
+            #[cfg(any(
+                feature = "stm32f1",
+                feature = "stm32f4"
+            ))]
+            let w = w.dff().clear_bit();
+            w.cpha()
             .bit(mode.phase == Phase::CaptureOnSecondTransition)
             .cpol()
             .bit(mode.polarity == Polarity::IdleHigh)
@@ -1083,8 +1181,6 @@ where
             .ssi()
             .set_bit()
             .rxonly()
-            .clear_bit()
-            .dff()
             .clear_bit()
             .bidimode()
             .clear_bit()
