@@ -2,7 +2,7 @@
 
 use core::marker::PhantomData;
 
-use crate::stm32::{EXTI, SYSCFG};
+use crate::stm32::EXTI;
 
 /// Extension trait to split a GPIO peripheral in independent pins and registers
 pub trait GpioExt {
@@ -79,7 +79,7 @@ pub enum Edge {
 
 /// External Interrupt Pin
 pub trait ExtiPin {
-    fn make_interrupt_source(&mut self, syscfg: &mut SYSCFG);
+    fn make_interrupt_source(&mut self);
     fn trigger_on_edge(&mut self, exti: &mut EXTI, level: Edge);
     fn enable_interrupt(&mut self, exti: &mut EXTI);
     fn disable_interrupt(&mut self, exti: &mut EXTI);
@@ -189,7 +189,8 @@ macro_rules! gpio {
 
             impl<MODE> ExtiPin for $PXx<Input<MODE>> {
                 /// Make corresponding EXTI line sensitive to this pin
-                fn make_interrupt_source(&mut self, syscfg: &mut SYSCFG) {
+                fn make_interrupt_source(&mut self) {
+                    let syscfg = unsafe { &(*SYSCFG::ptr()) };
                     let offset = 4 * (self.i % 4);
                     match self.i {
                         0...3 => {
@@ -605,7 +606,8 @@ macro_rules! gpio {
 
                 impl<MODE> ExtiPin for $PXi<Input<MODE>> {
                     /// Configure EXTI Line $i to trigger from this pin.
-                    fn make_interrupt_source(&mut self, syscfg: &mut SYSCFG) {
+                    fn make_interrupt_source(&mut self) {
+                        let syscfg = unsafe { &(*SYSCFG::ptr()) };
                         let offset = 4 * ($i % 4);
                         syscfg.$exticri.modify(|r, w| unsafe {
                             let mut exticr = r.bits();
