@@ -122,7 +122,7 @@ pub mod i2c;
 pub mod prelude;
 #[cfg(any(feature = "stm32f1", feature = "stm32f4"))]
 pub mod rcc;
-#[cfg(feature = "stm32f4")]
+#[cfg(any(feature = "stm32f1", feature = "stm32f4"))]
 pub mod serial;
 #[cfg(any(feature = "stm32f1", feature = "stm32f4"))]
 pub mod spi;
