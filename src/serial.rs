@@ -9,6 +9,7 @@ use nb::block;
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f1",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -32,6 +33,7 @@ use crate::stm32::{RCC, USART1, USART2};
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f1",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -65,6 +67,7 @@ use crate::stm32::USART5;
     feature = "stm32f103",
     feature = "stm32f105",
     feature = "stm32f107",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f413",
@@ -85,6 +88,7 @@ use crate::stm32::{UART4, UART5};
     feature = "stm32f0x0",
     feature = "stm32f0x1",
     feature = "stm32f0x8",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -132,6 +136,7 @@ use crate::stm32::{UART9, UART10};
 
 #[cfg(any(
     feature = "stm32f0",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f413",
@@ -150,6 +155,7 @@ use crate::gpio::gpioa::{PA0, PA1};
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f1",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -230,6 +236,7 @@ use crate::gpio::gpiob::{PB5};
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f1",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -257,6 +264,7 @@ use crate::gpio::gpiob::{PB8, PB9};
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f1",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -305,6 +313,7 @@ use crate::gpio::gpioc::{PC5};
 #[cfg(any(
     feature = "stm32f0x1",
     feature = "stm32f0x8",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -336,6 +345,7 @@ use crate::gpio::gpioc::{PC8, PC9};
     feature = "stm32f103",
     feature = "stm32f105",
     feature = "stm32f107",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -361,6 +371,7 @@ use crate::gpio::gpioc::{PC10, PC11};
     feature = "stm32f103",
     feature = "stm32f105",
     feature = "stm32f107",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f413",
@@ -391,6 +402,7 @@ use crate::gpio::gpiod::{PD0, PD1};
     feature = "stm32f103",
     feature = "stm32f105",
     feature = "stm32f107",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f413",
@@ -415,6 +427,7 @@ use crate::gpio::gpiod::PD2;
     feature = "stm32f103",
     feature = "stm32f105",
     feature = "stm32f107",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -442,6 +455,7 @@ use crate::gpio::gpiod::{PD5, PD6};
     feature = "stm32f103",
     feature = "stm32f105",
     feature = "stm32f107",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -569,6 +583,7 @@ use crate::gpio::gpiof::{PF10};
 ))]
 use crate::gpio::gpiog::{PG0, PG1};
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -602,7 +617,7 @@ use crate::gpio::{AF0, AF1, AF4};
 use crate::gpio::{AF2, AF5};
 #[cfg(feature = "stm32f1")]
 use crate::gpio::{Input, Floating, PushPull};
-#[cfg(feature = "stm32f4")]
+#[cfg(any(feature = "stm32f2", feature = "stm32f4"))]
 use crate::gpio::{AF7, AF8};
 #[cfg(any(
     feature = "stm32f413",
@@ -740,6 +755,7 @@ pub struct NoRx;
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f1",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -762,6 +778,7 @@ impl PinTx<USART1> for NoTx {}
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f1",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -798,6 +815,7 @@ impl PinTx<USART1> for PA9<Alternate<AF1>> {}
 #[cfg(feature = "stm32f1")]
 impl PinTx<USART1> for PA9<Alternate<PushPull>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -822,6 +840,7 @@ impl PinRx<USART1> for PA10<Alternate<AF1>> {}
 #[cfg(feature = "stm32f1")]
 impl PinRx<USART1> for PA10<Input<Floating>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -874,6 +893,7 @@ impl PinTx<USART1> for PB6<Alternate<AF0>> {}
 #[cfg(feature = "stm32f1")]
 impl PinTx<USART1> for PB6<Alternate<PushPull>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -898,6 +918,7 @@ impl PinRx<USART1> for PB7<Alternate<AF0>> {}
 #[cfg(feature = "stm32f1")]
 impl PinRx<USART1> for PB7<Input<Floating>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -921,6 +942,7 @@ impl PinRx<USART1> for PB7<Alternate<AF7>> {}
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f1",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -943,6 +965,7 @@ impl PinTx<USART2> for NoTx {}
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f1",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -967,6 +990,7 @@ impl PinTx<USART2> for PA2<Alternate<AF1>> {}
 #[cfg(feature = "stm32f1")]
 impl PinTx<USART2> for PA2<Alternate<PushPull>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -991,6 +1015,7 @@ impl PinRx<USART2> for PA3<Alternate<AF1>> {}
 #[cfg(feature = "stm32f1")]
 impl PinRx<USART2> for PA3<Input<Floating>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1029,6 +1054,7 @@ impl PinTx<USART2> for PD5<Alternate<AF0>> {}
 ))]
 impl PinTx<USART2> for PD5<Alternate<PushPull>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1062,6 +1088,7 @@ impl PinRx<USART2> for PD6<Alternate<AF0>> {}
 ))]
 impl PinRx<USART2> for PD6<Input<Floating>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1084,6 +1111,7 @@ impl PinRx<USART2> for PD6<Alternate<AF7>> {}
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f1",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -1103,6 +1131,7 @@ impl PinTx<USART3> for NoTx {}
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f1",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -1124,6 +1153,7 @@ impl PinTx<USART3> for PB10<Alternate<AF4>> {}
 #[cfg(feature = "stm32f1")]
 impl PinTx<USART3> for PB10<Alternate<PushPull>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -1145,6 +1175,7 @@ impl PinRx<USART3> for PB11<Alternate<AF4>> {}
 #[cfg(feature = "stm32f1")]
 impl PinRx<USART3> for PB11<Input<Floating>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -1183,6 +1214,7 @@ impl PinTx<USART3> for PC10<Alternate<AF1>> {}
 ))]
 impl PinTx<USART3> for PC10<Alternate<PushPull>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -1210,6 +1242,7 @@ impl PinRx<USART3> for PC11<Alternate<AF1>> {}
 ))]
 impl PinRx<USART3> for PC11<Input<Floating>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -1241,6 +1274,7 @@ impl PinTx<USART3> for PD8<Alternate<AF0>> {}
 ))]
 impl PinTx<USART3> for PD8<Alternate<PushPull>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -1272,6 +1306,7 @@ impl PinRx<USART3> for PD9<Alternate<AF0>> {}
 ))]
 impl PinRx<USART3> for PD9<Input<Floating>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -1297,6 +1332,7 @@ impl PinTx<USART4> for NoTx {}
     feature = "stm32f103",
     feature = "stm32f105",
     feature = "stm32f107",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f413",
@@ -1320,6 +1356,7 @@ impl PinRx<USART4> for NoRx {}
     feature = "stm32f103",
     feature = "stm32f105",
     feature = "stm32f107",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f413",
@@ -1338,6 +1375,7 @@ impl PinRx<UART4> for NoRx {}
 #[cfg(feature = "stm32f0")]
 impl PinTx<USART4> for PA0<Alternate<AF4>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f413",
@@ -1356,6 +1394,7 @@ impl PinTx<UART4> for PA0<Alternate<AF8>> {}
 #[cfg(feature = "stm32f0")]
 impl PinRx<USART4> for PA1<Alternate<AF4>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f413",
@@ -1392,6 +1431,7 @@ impl PinTx<USART4> for PC10<Alternate<AF0>> {}
 ))]
 impl PinTx<UART4> for PC10<Alternate<PushPull>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f415",
@@ -1416,6 +1456,7 @@ impl PinRx<USART4> for PC11<Alternate<AF0>> {}
 ))]
 impl PinRx<UART4> for PC11<Input<Floating>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f415",
@@ -1472,6 +1513,7 @@ impl PinTx<USART5> for NoTx {}
     feature = "stm32f103",
     feature = "stm32f105",
     feature = "stm32f107",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f413",
@@ -1499,6 +1541,7 @@ impl PinRx<USART5> for NoRx {}
     feature = "stm32f103",
     feature = "stm32f105",
     feature = "stm32f107",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f413",
@@ -1571,6 +1614,7 @@ impl PinTx<USART5> for PC12<Alternate<AF2>> {}
 ))]
 impl PinTx<UART5> for PC12<Alternate<PushPull>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f413",
@@ -1601,6 +1645,7 @@ impl PinRx<USART5> for PD2<Alternate<AF2>> {}
 ))]
 impl PinRx<UART5> for PD2<Input<Floating>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f413",
@@ -1639,6 +1684,7 @@ impl PinRx<USART5> for PE11<Alternate<AF1>> {}
     feature = "stm32f0x0",
     feature = "stm32f0x1",
     feature = "stm32f0x8",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1662,6 +1708,7 @@ impl PinTx<USART6> for NoTx {}
     feature = "stm32f0x0",
     feature = "stm32f0x1",
     feature = "stm32f0x8",
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1724,6 +1771,7 @@ impl PinTx<USART6> for PC0<Alternate<AF2>> {}
 ))]
 impl PinTx<USART6> for PC1<Alternate<AF2>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1744,6 +1792,7 @@ impl PinTx<USART6> for PC1<Alternate<AF2>> {}
 ))]
 impl PinTx<USART6> for PC6<Alternate<AF8>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1774,6 +1823,7 @@ impl PinTx<USART6> for PF9<Alternate<AF1>> {}
 ))]
 impl PinTx<USART6> for PF10<Alternate<AF1>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -1791,6 +1841,7 @@ impl PinTx<USART6> for PF10<Alternate<AF1>> {}
 ))]
 impl PinTx<USART6> for PG14<Alternate<AF8>> {}
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -2148,6 +2199,7 @@ macro_rules! halUsartImpl {
                         let m = w.m0();
                         #[cfg(any(
                             feature = "stm32f1",
+                            feature = "stm32f2",
                             feature = "stm32f4",
                         ))]
                         let m = w.m();
@@ -2364,6 +2416,7 @@ macro_rules! halUsart {
     feature = "stm32f103",
     feature = "stm32f105",
     feature = "stm32f107",
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f415",
@@ -2418,6 +2471,7 @@ halUsart! {
 }
 
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -2453,6 +2507,7 @@ halUsart! {
 }
 
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -2499,6 +2554,7 @@ halUart! {
 }
 
 #[cfg(any(
+    feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f415",
