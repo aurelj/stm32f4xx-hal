@@ -183,7 +183,7 @@ pub use stm32f4::stm32f469 as stm32;
 ))]
 pub use crate::stm32::interrupt;
 
-#[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f2", feature = "stm32f4"))]
+#[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f2", feature = "stm32f3", feature = "stm32f4"))]
 pub mod delay;
 #[cfg(feature = "stm32f1")]
 pub mod gpio_v1;
@@ -199,13 +199,13 @@ pub mod i2c_v2;
 pub use crate::i2c_v2 as i2c;
 #[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f2", feature = "stm32f4"))]
 pub mod prelude;
-#[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f2", feature = "stm32f4"))]
+#[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f2", feature = "stm32f3", feature = "stm32f4"))]
 pub mod rcc;
 #[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f2", feature = "stm32f4"))]
 pub mod serial;
 #[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f2", feature = "stm32f4"))]
 pub mod spi;
-#[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f2", feature = "stm32f4"))]
+#[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f2", feature = "stm32f3", feature = "stm32f4"))]
 pub mod time;
 #[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f2", feature = "stm32f4"))]
 pub mod timer;
