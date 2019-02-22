@@ -17,6 +17,16 @@ compile_error!("This crate requires one of the following device features enabled
         stm32f207
         stm32f215
         stm32f217
+        stm32f301
+        stm32f302
+        stm32f303
+        stm32f318
+        stm32f328
+        stm32f334
+        stm32f358
+        stm32f373
+        stm32f378
+        stm32f398
         stm32f401
         stm32f405
         stm32f407
@@ -82,6 +92,36 @@ pub use stm32f2::stm32f215 as stm32;
 #[cfg(feature = "stm32f217")]
 pub use stm32f2::stm32f217 as stm32;
 
+#[cfg(feature = "stm32f301")]
+pub use stm32f3::stm32f301 as stm32;
+
+#[cfg(feature = "stm32f302")]
+pub use stm32f3::stm32f302 as stm32;
+
+#[cfg(feature = "stm32f303")]
+pub use stm32f3::stm32f303 as stm32;
+
+#[cfg(feature = "stm32f318")]
+pub use stm32f3::stm32f301 as stm32;
+
+#[cfg(feature = "stm32f328")]
+pub use stm32f3::stm32f3x8 as stm32;
+
+#[cfg(feature = "stm32f334")]
+pub use stm32f3::stm32f3x4 as stm32;
+
+#[cfg(feature = "stm32f358")]
+pub use stm32f3::stm32f3x8 as stm32;
+
+#[cfg(feature = "stm32f373")]
+pub use stm32f3::stm32f373 as stm32;
+
+#[cfg(feature = "stm32f378")]
+pub use stm32f3::stm32f373 as stm32;
+
+#[cfg(feature = "stm32f398")]
+pub use stm32f3::stm32f3x8 as stm32;
+
 #[cfg(feature = "stm32f401")]
 pub use stm32f4::stm32f401 as stm32;
 
@@ -138,6 +178,7 @@ pub use stm32f4::stm32f469 as stm32;
     feature = "stm32f0-rt",
     feature = "stm32f1-rt",
     feature = "stm32f2-rt",
+    feature = "stm32f3-rt",
     feature = "stm32f4-rt",
 ))]
 pub use crate::stm32::interrupt;
