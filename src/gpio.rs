@@ -86,6 +86,56 @@ pub trait ExtiPin {
     fn clear_interrupt_pending_bit(&mut self, exti: &mut EXTI);
 }
 
+trait ExtiExt {
+    type RTSR;
+    type FTSR;
+    type IMR;
+    type PR;
+    fn rtsr(&self) -> &Self::RTSR;
+    fn ftsr(&self) -> &Self::FTSR;
+    fn imr(&self)  -> &Self::IMR;
+    fn pr(&self)   -> &Self::PR;
+}
+
+#[cfg(any(
+    feature = "stm32f0",
+    feature = "stm32f2",
+    feature = "stm32f301",
+    feature = "stm32f318",
+    feature = "stm32f328",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
+    feature = "stm32f4"
+))]
+impl ExtiExt for EXTI {
+    type RTSR = crate::stm32::exti::RTSR;
+    type FTSR = crate::stm32::exti::FTSR;
+    type IMR  = crate::stm32::exti::IMR;
+    type PR   = crate::stm32::exti::PR;
+    fn rtsr(&self) -> &Self::RTSR { &self.rtsr }
+    fn ftsr(&self) -> &Self::FTSR { &self.ftsr }
+    fn imr(&self)  -> &Self::IMR { &self.imr }
+    fn pr(&self)   -> &Self::PR { &self.pr }
+}
+
+#[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f334"
+))]
+impl ExtiExt for EXTI {
+    type RTSR = crate::stm32::exti::RTSR1;
+    type FTSR = crate::stm32::exti::FTSR1;
+    type IMR  = crate::stm32::exti::IMR1;
+    type PR   = crate::stm32::exti::PR1;
+    fn rtsr(&self) -> &Self::RTSR { &self.rtsr1 }
+    fn ftsr(&self) -> &Self::FTSR { &self.ftsr1 }
+    fn imr(&self) -> &Self::IMR { &self.imr1 }
+    fn pr(&self) -> &Self::PR { &self.pr1 }
+}
+
 macro_rules! gpio {
     ($GPIOX:ident, $gpiox:ident, $iopxenr:ident, $gpioxenr:ident, $PXx:ident, $extigpionr:expr, [
         $($PXi:ident: ($pxi:ident, $i:expr, $MODE:ty, $exticri:ident),)+
@@ -101,7 +151,7 @@ macro_rules! gpio {
             use super::{
                 Alternate, Floating, GpioExt, Input, OpenDrain, Output, Speed,
                 PullDown, PullUp, PushPull, AF0, AF1, AF2, AF3, AF4, AF5, AF6, AF7, AF8, AF9, AF10,
-                AF11, AF12, AF13, AF14, AF15, Analog, Edge, ExtiPin,
+                AF11, AF12, AF13, AF14, AF15, Analog, Edge, ExtiPin, ExtiExt,
             };
 
             /// GPIO parts
@@ -118,7 +168,7 @@ macro_rules! gpio {
                 fn split(self) -> Parts {
                     // NOTE(unsafe) This executes only during initialisation
                     let rcc = unsafe { &(*RCC::ptr()) };
-                    #[cfg(feature = "stm32f0")]
+                    #[cfg(any(feature = "stm32f0", feature = "stm32f3"))]
                     rcc.ahbenr.modify(|_, w| w.$iopxenr().set_bit());
                     #[cfg(any(feature = "stm32f2", feature = "stm32f4"))]
                     rcc.ahb1enr.modify(|_, w| w.$gpioxenr().set_bit());
@@ -224,33 +274,33 @@ macro_rules! gpio {
                 fn trigger_on_edge(&mut self, exti: &mut EXTI, edge: Edge) {
                     match edge {
                         Edge::RISING => {
-                            exti.rtsr.modify(|r, w| unsafe { w.bits(r.bits() | (1 << self.i)) });
-                            exti.ftsr.modify(|r, w| unsafe { w.bits(r.bits() & !(1 << self.i)) });
+                            exti.rtsr().modify(|r, w| unsafe { w.bits(r.bits() | (1 << self.i)) });
+                            exti.ftsr().modify(|r, w| unsafe { w.bits(r.bits() & !(1 << self.i)) });
                         },
                         Edge::FALLING => {
-                            exti.ftsr.modify(|r, w| unsafe { w.bits(r.bits() | (1 << self.i)) });
-                            exti.rtsr.modify(|r, w| unsafe { w.bits(r.bits() & !(1 << self.i)) });
+                            exti.ftsr().modify(|r, w| unsafe { w.bits(r.bits() | (1 << self.i)) });
+                            exti.rtsr().modify(|r, w| unsafe { w.bits(r.bits() & !(1 << self.i)) });
                         },
                         Edge::RISING_FALLING => {
-                            exti.rtsr.modify(|r, w| unsafe { w.bits(r.bits() | (1 << self.i)) });
-                            exti.ftsr.modify(|r, w| unsafe { w.bits(r.bits() | (1 << self.i)) });
+                            exti.rtsr().modify(|r, w| unsafe { w.bits(r.bits() | (1 << self.i)) });
+                            exti.ftsr().modify(|r, w| unsafe { w.bits(r.bits() | (1 << self.i)) });
                         }
                     }
                 }
 
                 /// Enable external interrupts from this pin.
                 fn enable_interrupt(&mut self, exti: &mut EXTI) {
-                    exti.imr.modify(|r, w| unsafe { w.bits(r.bits() | (1 << self.i)) });
+                    exti.imr().modify(|r, w| unsafe { w.bits(r.bits() | (1 << self.i)) });
                 }
 
                 /// Disable external interrupts from this pin
                 fn disable_interrupt(&mut self, exti: &mut EXTI) {
-                    exti.imr.modify(|r, w| unsafe { w.bits(r.bits() & !(1 << self.i)) });
+                    exti.imr().modify(|r, w| unsafe { w.bits(r.bits() & !(1 << self.i)) });
                 }
 
                 /// Clear the interrupt pending bit for this pin
                 fn clear_interrupt_pending_bit(&mut self, exti: &mut EXTI) {
-                    exti.pr.modify(|r, w| unsafe { w.bits(r.bits() | (1 << self.i)) });
+                    exti.pr().modify(|r, w| unsafe { w.bits(r.bits() | (1 << self.i)) });
                 }
             }
 
@@ -623,33 +673,33 @@ macro_rules! gpio {
                     fn trigger_on_edge(&mut self, exti: &mut EXTI, edge: Edge) {
                         match edge {
                             Edge::RISING => {
-                                exti.rtsr.modify(|r, w| unsafe { w.bits(r.bits() | (1 << $i)) });
-                                exti.ftsr.modify(|r, w| unsafe { w.bits(r.bits() & !(1 << $i)) });
+                                exti.rtsr().modify(|r, w| unsafe { w.bits(r.bits() | (1 << $i)) });
+                                exti.ftsr().modify(|r, w| unsafe { w.bits(r.bits() & !(1 << $i)) });
                             },
                             Edge::FALLING => {
-                                exti.ftsr.modify(|r, w| unsafe { w.bits(r.bits() | (1 << $i)) });
-                                exti.rtsr.modify(|r, w| unsafe { w.bits(r.bits() & !(1 << $i)) });
+                                exti.ftsr().modify(|r, w| unsafe { w.bits(r.bits() | (1 << $i)) });
+                                exti.rtsr().modify(|r, w| unsafe { w.bits(r.bits() & !(1 << $i)) });
                             },
                             Edge::RISING_FALLING => {
-                                exti.rtsr.modify(|r, w| unsafe { w.bits(r.bits() | (1 << $i)) });
-                                exti.ftsr.modify(|r, w| unsafe { w.bits(r.bits() | (1 << $i)) });
+                                exti.rtsr().modify(|r, w| unsafe { w.bits(r.bits() | (1 << $i)) });
+                                exti.ftsr().modify(|r, w| unsafe { w.bits(r.bits() | (1 << $i)) });
                             }
                         }
                     }
 
                     /// Enable external interrupts from this pin.
                     fn enable_interrupt(&mut self, exti: &mut EXTI) {
-                        exti.imr.modify(|r, w| unsafe { w.bits(r.bits() | (1 << $i)) });
+                        exti.imr().modify(|r, w| unsafe { w.bits(r.bits() | (1 << $i)) });
                     }
 
                     /// Disable external interrupts from this pin
                     fn disable_interrupt(&mut self, exti: &mut EXTI) {
-                        exti.imr.modify(|r, w| unsafe { w.bits(r.bits() & !(1 << $i)) });
+                        exti.imr().modify(|r, w| unsafe { w.bits(r.bits() & !(1 << $i)) });
                     }
 
                     /// Clear the interrupt pending bit for this pin
                     fn clear_interrupt_pending_bit(&mut self, exti: &mut EXTI) {
-                        exti.pr.modify(|r, w| unsafe { w.bits(r.bits() | (1 << $i)) });
+                        exti.pr().modify(|r, w| unsafe { w.bits(r.bits() | (1 << $i)) });
                     }
                 }
 
@@ -661,6 +711,7 @@ macro_rules! gpio {
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -701,6 +752,7 @@ gpio!(GPIOA, gpioa, iopaen, gpioaen, PA, 0, [
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -741,6 +793,7 @@ gpio!(GPIOB, gpiob, iopben, gpioben, PB, 1, [
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -781,6 +834,7 @@ gpio!(GPIOC, gpioc, iopcen, gpiocen, PC, 2, [
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -822,6 +876,12 @@ gpio!(GPIOD, gpiod, iopden, gpioden, PD, 3, [
     feature = "stm32f0x2",
     feature = "stm32f0x8",
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -861,6 +921,7 @@ gpio!(GPIOE, gpioe, iopeen, gpioeen, PE, 4, [
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -897,6 +958,8 @@ gpio!(GPIOF, gpiof, iopfen, gpiofen, PF, 5, [
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -933,6 +996,8 @@ gpio!(GPIOG, gpiog, iopgen, gpiogen, PG, 6, [
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f410",
