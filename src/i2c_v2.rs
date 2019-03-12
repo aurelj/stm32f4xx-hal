@@ -2,14 +2,123 @@ use core::ops::Deref;
 
 use crate::stm32::i2c1;
 
-use crate::stm32::{I2C1, I2C2, RCC};
+use crate::stm32::{I2C1, RCC};
+#[cfg(any(
+    feature = "stm32f0",
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398"
+))]
+use crate::stm32::I2C2;
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f398"
+))]
+use crate::stm32::I2C3;
 
 use embedded_hal::blocking::i2c::{Read, Write, WriteRead};
 
-use crate::gpio::gpioa::{PA9, PA10, PA11, PA12};
-use crate::gpio::gpiob::{PB6, PB7, PB8, PB9, PB10, PB11, PB13, PB14};
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f398"
+))]
+use crate::gpio::gpioa::PA8;
+#[cfg(any(
+    feature = "stm32f0",
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398"
+))]
+use crate::gpio::gpioa::{PA9, PA10};
+#[cfg(any(
+    feature = "stm32f0"
+))]
+use crate::gpio::gpioa::{PA11, PA12};
+#[cfg(any(
+    feature = "stm32f3"
+))]
+use crate::gpio::gpioa::{PA14, PA15};
+
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f398"
+))]
+use crate::gpio::gpiob::PB5;
+#[cfg(any(
+    feature = "stm32f0",
+    feature = "stm32f3"
+))]
+use crate::gpio::gpiob::{PB6, PB7, PB8, PB9};
+#[cfg(any(
+    feature = "stm32f0"
+))]
+use crate::gpio::gpiob::{PB10, PB11, PB13, PB14};
+
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f398"
+))]
+use crate::gpio::gpioc::PC9;
+
+#[cfg(any(
+    feature = "stm32f0",
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398"
+))]
 use crate::gpio::gpiof::{PF0, PF1};
-use crate::gpio::{Alternate, AF1, AF4, AF5};
+#[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398"
+))]
+use crate::gpio::gpiof::PF6;
+#[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+use crate::gpio::gpiof::PF7;
+
+use crate::gpio::{Alternate, AF4};
+#[cfg(feature = "stm32f0")]
+use crate::gpio::{AF1, AF5};
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f398"
+))]
+use crate::gpio::{AF3, AF8};
 
 use crate::rcc::Clocks;
 use crate::time::{KiloHertz, U32Ext};
@@ -30,27 +139,141 @@ where
     SDA: PinSda<I2c>,
 {}
 
+#[cfg(feature = "stm32f0")]
 impl PinScl<I2C1> for PA9<Alternate<AF4>> {}
+#[cfg(feature = "stm32f0")]
 impl PinSda<I2C1> for PA10<Alternate<AF4>> {}
+#[cfg(feature = "stm32f0")]
 impl PinScl<I2C1> for PA11<Alternate<AF5>> {}
+#[cfg(feature = "stm32f0")]
 impl PinSda<I2C1> for PA12<Alternate<AF5>> {}
+#[cfg(feature = "stm32f3")]
+impl PinScl<I2C1> for PA15<Alternate<AF4>> {}
+#[cfg(feature = "stm32f3")]
+impl PinSda<I2C1> for PA14<Alternate<AF4>> {}
+#[cfg(feature = "stm32f0")]
 impl PinScl<I2C1> for PB6<Alternate<AF1>> {}
+#[cfg(feature = "stm32f3")]
+impl PinScl<I2C1> for PB6<Alternate<AF4>> {}
+#[cfg(feature = "stm32f0")]
 impl PinSda<I2C1> for PB7<Alternate<AF1>> {}
+#[cfg(feature = "stm32f3")]
+impl PinSda<I2C1> for PB7<Alternate<AF4>> {}
+#[cfg(feature = "stm32f0")]
 impl PinScl<I2C1> for PB8<Alternate<AF1>> {}
+#[cfg(feature = "stm32f3")]
+impl PinScl<I2C1> for PB8<Alternate<AF4>> {}
+#[cfg(feature = "stm32f0")]
 impl PinSda<I2C1> for PB9<Alternate<AF1>> {}
+#[cfg(feature = "stm32f3")]
+impl PinSda<I2C1> for PB9<Alternate<AF4>> {}
+#[cfg(feature = "stm32f0")]
 impl PinScl<I2C1> for PB10<Alternate<AF1>> {}
+#[cfg(feature = "stm32f0")]
 impl PinSda<I2C1> for PB11<Alternate<AF1>> {}
+#[cfg(feature = "stm32f0")]
 impl PinScl<I2C1> for PB13<Alternate<AF5>> {}
+#[cfg(feature = "stm32f0")]
 impl PinSda<I2C1> for PB14<Alternate<AF5>> {}
+#[cfg(feature = "stm32f0")]
 impl PinScl<I2C1> for PF1<Alternate<AF1>> {}
+#[cfg(feature = "stm32f0")]
 impl PinSda<I2C1> for PF0<Alternate<AF1>> {}
 
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398"
+))]
+impl PinScl<I2C2> for PA9<Alternate<AF4>> {}
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398"
+))]
+impl PinSda<I2C2> for PA10<Alternate<AF4>> {}
+#[cfg(feature = "stm32f0")]
 impl PinScl<I2C2> for PA11<Alternate<AF5>> {}
+#[cfg(feature = "stm32f0")]
 impl PinSda<I2C2> for PA12<Alternate<AF5>> {}
+#[cfg(feature = "stm32f0")]
 impl PinScl<I2C2> for PB10<Alternate<AF1>> {}
+#[cfg(feature = "stm32f0")]
 impl PinSda<I2C2> for PB11<Alternate<AF1>> {}
+#[cfg(feature = "stm32f0")]
 impl PinScl<I2C2> for PB13<Alternate<AF5>> {}
+#[cfg(feature = "stm32f0")]
 impl PinSda<I2C2> for PB14<Alternate<AF5>> {}
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398"
+))]
+impl PinScl<I2C2> for PF1<Alternate<AF4>> {}
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398"
+))]
+impl PinSda<I2C2> for PF0<Alternate<AF4>> {}
+#[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398"
+))]
+impl PinScl<I2C2> for PF6<Alternate<AF4>> {}
+#[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+impl PinSda<I2C2> for PF7<Alternate<AF4>> {}
+
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f398"
+))]
+impl PinScl<I2C3> for PA8<Alternate<AF3>> {}
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f398"
+))]
+impl PinSda<I2C3> for PB5<Alternate<AF8>> {}
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f398"
+))]
+impl PinSda<I2C3> for PC9<Alternate<AF3>> {}
 
 #[derive(Debug)]
 pub enum Error {
@@ -77,6 +300,17 @@ impl<PINS> I2c<I2C1, PINS> {
     }
 }
 
+#[cfg(any(
+    feature = "stm32f0",
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398"
+))]
 impl<PINS> I2c<I2C2, PINS> {
     pub fn i2c2(i2c: I2C2, pins: PINS, speed: KiloHertz, _clocks: Clocks) -> Self
     where
@@ -91,6 +325,32 @@ impl<PINS> I2c<I2C2, PINS> {
         // Reset I2C2
         rcc.apb1rstr.modify(|_, w| w.i2c2rst().set_bit());
         rcc.apb1rstr.modify(|_, w| w.i2c2rst().clear_bit());
+
+        I2c { i2c, pins }.i2c_init(speed)
+    }
+}
+
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f398"
+))]
+impl<PINS> I2c<I2C3, PINS> {
+    pub fn i2c3(i2c: I2C3, pins: PINS, speed: KiloHertz, _clocks: Clocks) -> Self
+    where
+        PINS: Pins<I2C3>,
+    {
+        // NOTE(unsafe) This executes only during initialisation
+        let rcc = unsafe { &(*RCC::ptr()) };
+
+        // Enable clock for I2C3
+        rcc.apb1enr.modify(|_, w| w.i2c3en().set_bit());
+
+        // Reset I2C3
+        rcc.apb1rstr.modify(|_, w| w.i2c3rst().set_bit());
+        rcc.apb1rstr.modify(|_, w| w.i2c3rst().clear_bit());
 
         I2c { i2c, pins }.i2c_init(speed)
     }
