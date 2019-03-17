@@ -5,10 +5,20 @@ use embedded_hal::spi;
 pub use embedded_hal::spi::{Mode, Phase, Polarity};
 use nb;
 
+use crate::stm32::{spi1, RCC};
+
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f1",
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -27,7 +37,39 @@ use nb;
     feature = "stm32f469",
     feature = "stm32f479"
 ))]
-use crate::stm32::{spi1, SPI1, SPI2, RCC};
+use crate::stm32::SPI1;
+
+#[cfg(any(
+    feature = "stm32f0",
+    feature = "stm32f1",
+    feature = "stm32f2",
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
+    feature = "stm32f401",
+    feature = "stm32f405",
+    feature = "stm32f407",
+    feature = "stm32f410",
+    feature = "stm32f411",
+    feature = "stm32f412",
+    feature = "stm32f413",
+    feature = "stm32f415",
+    feature = "stm32f417",
+    feature = "stm32f423",
+    feature = "stm32f427",
+    feature = "stm32f429",
+    feature = "stm32f437",
+    feature = "stm32f439",
+    feature = "stm32f446",
+    feature = "stm32f469",
+    feature = "stm32f479"
+))]
+use crate::stm32::SPI2;
 
 #[cfg(any(
     feature = "stm32f100",
@@ -37,6 +79,14 @@ use crate::stm32::{spi1, SPI1, SPI2, RCC};
     feature = "stm32f105",
     feature = "stm32f107",
     feature = "stm32f2",
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -57,6 +107,9 @@ use crate::stm32::{spi1, SPI1, SPI2, RCC};
 use crate::stm32::SPI3;
 
 #[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f411",
     feature = "stm32f412",
@@ -98,6 +151,22 @@ use crate::stm32::SPI5;
 use crate::stm32::SPI6;
 
 #[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f411",
+    feature = "stm32f412",
+    feature = "stm32f413",
+    feature = "stm32f423"
+))]
+use crate::gpio::gpioa::PA1;
+#[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+use crate::gpio::gpioa::{PA2, PA3, PA8, PA13};
+#[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378",
     feature = "stm32f413",
     feature = "stm32f423",
     feature = "stm32f446",
@@ -106,24 +175,54 @@ use crate::stm32::SPI6;
 ))]
 use crate::gpio::gpioa::PA9;
 #[cfg(any(
-    feature = "stm32f411",
-    feature = "stm32f412",
-    feature = "stm32f413",
-    feature = "stm32f423"
-))]
-use crate::gpio::gpioa::{PA1, PA11};
-#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f410",
     feature = "stm32f411",
     feature = "stm32f412",
     feature = "stm32f413",
     feature = "stm32f423"
 ))]
-use crate::gpio::gpioa::{PA10, PA12};
+use crate::gpio::gpioa::PA10;
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f398",
+    feature = "stm32f411",
+    feature = "stm32f412",
+    feature = "stm32f413",
+    feature = "stm32f423"
+))]
+use crate::gpio::gpioa::PA11;
+#[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f410",
+    feature = "stm32f411",
+    feature = "stm32f412",
+    feature = "stm32f413",
+    feature = "stm32f423"
+))]
+use crate::gpio::gpioa::PA12;
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f1",
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -145,6 +244,8 @@ use crate::gpio::gpioa::{PA10, PA12};
 use crate::gpio::gpioa::{PA5, PA6, PA7};
 
 #[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378",
     feature = "stm32f410",
     feature = "stm32f411",
     feature = "stm32f412",
@@ -163,6 +264,8 @@ use crate::gpio::gpiob::PB12;
 #[cfg(any(feature = "stm32f446"))]
 use crate::gpio::gpiob::PB2;
 #[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378",
     feature = "stm32f410",
     feature = "stm32f411",
     feature = "stm32f412",
@@ -174,6 +277,7 @@ use crate::gpio::gpiob::PB8;
     feature = "stm32f0",
     feature = "stm32f1",
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -192,10 +296,46 @@ use crate::gpio::gpiob::PB8;
     feature = "stm32f469",
     feature = "stm32f479"
 ))]
-use crate::gpio::gpiob::{PB13, PB14, PB15, PB3, PB4, PB5};
+use crate::gpio::gpiob::{PB3, PB4, PB5};
+#[cfg(any(
+    feature = "stm32f0",
+    feature = "stm32f1",
+    feature = "stm32f2",
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f398",
+    feature = "stm32f401",
+    feature = "stm32f405",
+    feature = "stm32f407",
+    feature = "stm32f410",
+    feature = "stm32f411",
+    feature = "stm32f412",
+    feature = "stm32f413",
+    feature = "stm32f415",
+    feature = "stm32f417",
+    feature = "stm32f423",
+    feature = "stm32f427",
+    feature = "stm32f429",
+    feature = "stm32f437",
+    feature = "stm32f439",
+    feature = "stm32f446",
+    feature = "stm32f469",
+    feature = "stm32f479"
+))]
+use crate::gpio::gpiob::{PB13, PB14, PB15};
+#[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+use crate::gpio::gpiob::{PB14, PB15};
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f2",
+    feature = "stm32f373",
+    feature = "stm32f378",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -223,6 +363,8 @@ use crate::gpio::gpiob::PB10;
 ))]
 use crate::gpio::gpioc::PC1;
 #[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378",
     feature = "stm32f410",
     feature = "stm32f411",
     feature = "stm32f412",
@@ -232,9 +374,22 @@ use crate::gpio::gpioc::PC1;
 ))]
 use crate::gpio::gpioc::PC7;
 #[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+use crate::gpio::gpioc::{PC8, PC9};
+#[cfg(any(
     feature = "stm32f105",
     feature = "stm32f107",
     feature = "stm32f2",
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -256,6 +411,8 @@ use crate::gpio::gpioc::{PC10, PC11, PC12};
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f2",
+    feature = "stm32f373",
+    feature = "stm32f378",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -283,7 +440,15 @@ use crate::gpio::gpiod::PD0;
     feature = "stm32f0x2",
     feature = "stm32f0x8"
 ))]
-use crate::gpio::gpiod::{PD1, PD3, PD4};
+use crate::gpio::gpiod::PD1;
+#[cfg(any(
+    feature = "stm32f0x1",
+    feature = "stm32f0x2",
+    feature = "stm32f0x8",
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+use crate::gpio::gpiod::{PD3, PD4};
 #[cfg(any(
     feature = "stm32f401",
     feature = "stm32f411",
@@ -299,8 +464,16 @@ use crate::gpio::gpiod::{PD1, PD3, PD4};
     feature = "stm32f479"
 ))]
 use crate::gpio::gpiod::{PD3, PD6};
+#[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+use crate::gpio::gpiod::{PD7, PD8};
 
 #[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f411",
     feature = "stm32f412",
@@ -323,6 +496,19 @@ use crate::gpio::gpioe::{PE12, PE13, PE14, PE2, PE5, PE6};
 use crate::gpio::gpioe::{PE13, PE14, PE15};
 
 #[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f398"
+))]
+use crate::gpio::gpiof::PF1;
+#[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+use crate::gpio::gpiof::PF6;
+#[cfg(any(
     feature = "stm32f427",
     feature = "stm32f429",
     feature = "stm32f437",
@@ -331,6 +517,13 @@ use crate::gpio::gpioe::{PE13, PE14, PE15};
     feature = "stm32f479"
 ))]
 use crate::gpio::gpiof::{PF11, PF7, PF8, PF9};
+#[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+use crate::gpio::gpiof::{PF9, PF10};
 
 #[cfg(any(feature = "stm32f446"))]
 use crate::gpio::gpiog::PG11;
@@ -383,6 +576,14 @@ use crate::gpio::gpioi::{PI1, PI2, PI3};
 use crate::gpio::{AF0, AF1, AF5};
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -403,6 +604,11 @@ use crate::gpio::{AF0, AF1, AF5};
 ))]
 use crate::gpio::{AF5, AF6};
 #[cfg(any(
+    feature = "stm32f328",
+    feature = "stm32f334"
+))]
+use crate::gpio::AF5;
+#[cfg(any(
     feature = "stm32f411",
     feature = "stm32f412",
     feature = "stm32f413",
@@ -414,6 +620,7 @@ use crate::gpio::AF7;
     feature = "stm32f0",
     feature = "stm32f1",
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -589,6 +796,14 @@ pins! {
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -624,23 +839,161 @@ pins! {
             PA7<Alternate<AF5>>,
             PB5<Alternate<AF5>>
         ]
+}
 
+#[cfg(any(
+    feature = "stm32f2",
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f398",
+    feature = "stm32f401",
+    feature = "stm32f405",
+    feature = "stm32f407",
+    feature = "stm32f410",
+    feature = "stm32f411",
+    feature = "stm32f412",
+    feature = "stm32f413",
+    feature = "stm32f415",
+    feature = "stm32f417",
+    feature = "stm32f423",
+    feature = "stm32f427",
+    feature = "stm32f429",
+    feature = "stm32f437",
+    feature = "stm32f439",
+    feature = "stm32f446",
+    feature = "stm32f469",
+    feature = "stm32f479"
+))]
+pins! {
     SPI2:
         SCK: [
             NoSck,
-            PB10<Alternate<AF5>>,
             PB13<Alternate<AF5>>
         ]
         MISO: [
             NoMiso,
-            PB14<Alternate<AF5>>,
-            PC2<Alternate<AF5>>
+            PB14<Alternate<AF5>>
         ]
         MOSI: [
             NoMosi,
+            PB15<Alternate<AF5>>
+        ]
+}
+
+#[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+pins! {
+    SPI1:
+        SCK: [
+            PA12<Alternate<AF6>>,
+            PC7<Alternate<AF5>>
+        ]
+        MISO: [
+            PA13<Alternate<AF6>>,
+            PC8<Alternate<AF5>>
+        ]
+        MOSI: [
+            PB0<Alternate<AF5>>,
+            PC9<Alternate<AF5>>,
+            PF6<Alternate<AF5>>
+        ]
+
+    SPI2:
+        SCK: [
+            NoSck,
+            PA8<Alternate<AF5>>,
+            PB8<Alternate<AF5>>,
+            PD7<Alternate<AF5>>,
+            PD8<Alternate<AF5>>
+        ]
+        MISO: [
+            NoMiso,
+            PA9<Alternate<AF5>>,
+            PB14<Alternate<AF5>>,
+            PD3<Alternate<AF5>>
+        ]
+        MOSI: [
+            NoMosi,
+            PA10<Alternate<AF5>>,
             PB15<Alternate<AF5>>,
+            PD4<Alternate<AF5>>
+        ]
+}
+
+#[cfg(any(
+    feature = "stm32f2",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f401",
+    feature = "stm32f405",
+    feature = "stm32f407",
+    feature = "stm32f410",
+    feature = "stm32f411",
+    feature = "stm32f412",
+    feature = "stm32f413",
+    feature = "stm32f415",
+    feature = "stm32f417",
+    feature = "stm32f423",
+    feature = "stm32f427",
+    feature = "stm32f429",
+    feature = "stm32f437",
+    feature = "stm32f439",
+    feature = "stm32f446",
+    feature = "stm32f469",
+    feature = "stm32f479"
+))]
+pins! {
+    SPI2:
+        SCK: [
+            PB10<Alternate<AF5>>
+        ]
+        MISO: [
+            PC2<Alternate<AF5>>
+        ]
+        MOSI: [
             PC3<Alternate<AF5>>
         ]
+}
+
+#[cfg(any(
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f398",
+))]
+pins! {
+    SPI2:
+        SCK: [
+            PF1<Alternate<AF5>>
+        ]
+        MISO: [
+            PA10<Alternate<AF5>>
+        ]
+        MOSI: [
+            PA11<Alternate<AF5>>
+        ]
+}
+
+#[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398",
+))]
+pins! {
+    SPI2:
+        SCK: [
+            PF9<Alternate<AF5>>,
+            PF10<Alternate<AF5>>
+        ]
+        MISO: []
+        MOSI: []
 }
 
 #[cfg(any(
@@ -682,6 +1035,14 @@ pins! {
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -719,6 +1080,23 @@ pins! {
 }
 
 #[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+pins! {
+    SPI3:
+        SCK: [
+            PA1<Alternate<AF6>>
+        ]
+        MISO: [
+            PA2<Alternate<AF6>>
+        ]
+        MOSI: [
+            PA3<Alternate<AF6>>
+        ]
+}
+
+#[cfg(any(
     feature = "stm32f401",
     feature = "stm32f411",
     feature = "stm32f412",
@@ -741,6 +1119,26 @@ pins! {
         SCK: []
         MISO: []
         MOSI: [PD6<Alternate<AF5>>]
+}
+
+#[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f398",
+    feature = "stm32f401",
+    feature = "stm32f411",
+    feature = "stm32f412",
+    feature = "stm32f413",
+    feature = "stm32f423",
+    feature = "stm32f427",
+    feature = "stm32f429",
+    feature = "stm32f437",
+    feature = "stm32f439",
+    feature = "stm32f446",
+    feature = "stm32f469",
+    feature = "stm32f479"
+))]
+pins! {
     SPI4:
         SCK: [
             NoSck,
@@ -950,6 +1348,14 @@ pub struct Spi<SPI, PINS> {
     feature = "stm32f0",
     feature = "stm32f1",
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -991,6 +1397,14 @@ impl<PINS> Spi<SPI1, PINS> {
     feature = "stm32f105",
     feature = "stm32f107",
     feature = "stm32f2",
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1031,6 +1445,14 @@ impl<PINS> Spi<SPI2, PINS> {
     feature = "stm32f105",
     feature = "stm32f107",
     feature = "stm32f2",
+    feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f318",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1064,6 +1486,9 @@ impl<PINS> Spi<SPI3, PINS> {
 }
 
 #[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f411",
     feature = "stm32f412",
