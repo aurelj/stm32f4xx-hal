@@ -28,6 +28,7 @@ impl IndependentWatchdog {
     pub fn stop_on_debug(&self, dbgmcu: &DBGMCU, stop: bool) {
         #[cfg(any(
             feature = "stm32f0",
+            feature = "stm32f2",
             feature = "stm32f4"
         ))]
         dbgmcu.apb1_fz.modify(|_, w| w.dbg_iwdg_stop().bit(stop));

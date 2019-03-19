@@ -170,7 +170,7 @@ pub mod time;
 pub mod timer;
 #[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f4"))]
 pub mod qei;
-#[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f4"))]
+#[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f2", feature = "stm32f4"))]
 pub mod watchdog;
 #[cfg(feature = "stm32f4")]
 pub mod adc;
