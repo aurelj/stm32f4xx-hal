@@ -26,7 +26,10 @@ impl IndependentWatchdog {
 
     /// Debug independent watchdog stopped when core is halted
     pub fn stop_on_debug(&self, dbgmcu: &DBGMCU, stop: bool) {
-        #[cfg(feature = "stm32f4")]
+        #[cfg(any(
+            feature = "stm32f0",
+            feature = "stm32f4"
+        ))]
         dbgmcu.apb1_fz.modify(|_, w| w.dbg_iwdg_stop().bit(stop));
         #[cfg(feature = "stm32f1")]
         dbgmcu.cr.modify(|_, w| w.dbg_iwdg_stop().bit(stop));
