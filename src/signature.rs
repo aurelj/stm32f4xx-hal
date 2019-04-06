@@ -5,7 +5,7 @@
 use core::str::from_utf8_unchecked;
 
 /// This is the test voltage, in millivolts of the calibration done at the factory
-#[cfg(feature = "stm32f4")]
+#[cfg(any(feature = "stm32f0", feature = "stm32f4"))]
 pub const VDDA_CALIB: u32 = 3300;
 
 macro_rules! define_ptr_type {
@@ -31,6 +31,8 @@ pub struct Uid {
     y: u16,
     waf_lot: [u8; 8],
 }
+#[cfg(feature = "stm32f0")]
+define_ptr_type!(Uid, 0x1FFF_F7AC);
 #[cfg(feature = "stm32f1")]
 define_ptr_type!(Uid, 0x1FFF_F7E8);
 #[cfg(feature = "stm32f4")]
@@ -64,6 +66,8 @@ impl Uid {
 #[derive(Debug)]
 #[repr(C)]
 pub struct FlashSize(u16);
+#[cfg(feature = "stm32f0")]
+define_ptr_type!(FlashSize, 0x1FFF_F7CC);
 #[cfg(feature = "stm32f1")]
 define_ptr_type!(FlashSize, 0x1FFF_F7E0);
 #[cfg(feature = "stm32f4")]
@@ -85,6 +89,8 @@ impl FlashSize {
 #[derive(Debug)]
 #[repr(C)]
 pub struct VrefCal(u16);
+#[cfg(feature = "stm32f0")]
+define_ptr_type!(VrefCal, 0x1FFF_F7BA);
 #[cfg(feature = "stm32f4")]
 define_ptr_type!(VrefCal, 0x1FFF_7A2A);
 
@@ -99,6 +105,8 @@ impl VrefCal {
 #[derive(Debug)]
 #[repr(C)]
 pub struct VtempCal30(u16);
+#[cfg(feature = "stm32f0")]
+define_ptr_type!(VtempCal30, 0x1FFF_F7B8);
 #[cfg(feature = "stm32f4")]
 define_ptr_type!(VtempCal30, 0x1FFF_7A2C);
 
@@ -113,6 +121,8 @@ impl VtempCal30 {
 #[derive(Debug)]
 #[repr(C)]
 pub struct VtempCal110(u16);
+#[cfg(feature = "stm32f0")]
+define_ptr_type!(VtempCal110, 0x1FFF_F7C2);
 #[cfg(feature = "stm32f4")]
 define_ptr_type!(VtempCal110, 0x1FFF_7A2E);
 
