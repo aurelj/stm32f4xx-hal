@@ -35,7 +35,7 @@ pub struct Uid {
 define_ptr_type!(Uid, 0x1FFF_F7AC);
 #[cfg(feature = "stm32f1")]
 define_ptr_type!(Uid, 0x1FFF_F7E8);
-#[cfg(feature = "stm32f4")]
+#[cfg(any(feature = "stm32f2", feature = "stm32f4"))]
 define_ptr_type!(Uid, 0x1FFF_7A10);
 
 impl Uid {
@@ -70,7 +70,7 @@ pub struct FlashSize(u16);
 define_ptr_type!(FlashSize, 0x1FFF_F7CC);
 #[cfg(feature = "stm32f1")]
 define_ptr_type!(FlashSize, 0x1FFF_F7E0);
-#[cfg(feature = "stm32f4")]
+#[cfg(any(feature = "stm32f2", feature = "stm32f4"))]
 define_ptr_type!(FlashSize, 0x1FFF_7A22);
 
 impl FlashSize {

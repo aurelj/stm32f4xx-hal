@@ -174,5 +174,5 @@ pub mod qei;
 pub mod watchdog;
 #[cfg(feature = "stm32f4")]
 pub mod adc;
-#[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f4"))]
+#[cfg(any(feature = "stm32f0", feature = "stm32f1", feature = "stm32f2", feature = "stm32f4"))]
 pub mod signature;
