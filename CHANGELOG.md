@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Implemented `Qei` trait
 
+- Add support for the stm32f0 series
+
+- Add support for the stm32f1 series
+
+- Add support for the stm32f2 series
+
+- Add support for the stm32f3 series
+
 ## [v0.5.0] - 2019-04-27
 
 ### Changed
