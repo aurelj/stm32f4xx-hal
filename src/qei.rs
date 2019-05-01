@@ -1,9 +1,12 @@
 //! # Quadrature Encoder Interface
 use crate::hal::{self, Direction};
 use crate::stm32::RCC;
+#[cfg(feature = "stm32f1")]
+use crate::stm32::AFIO;
 
 use crate::gpio::gpioa::*;
 #[cfg(any(
+    feature = "stm32f1",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -24,6 +27,7 @@ use crate::gpio::gpioa::*;
 ))]
 use crate::gpio::gpiob::*;
 #[cfg(any(
+    feature = "stm32f1",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -43,6 +47,11 @@ use crate::gpio::gpiob::*;
 ))]
 use crate::gpio::gpioc::*;
 #[cfg(any(
+    feature = "stm32f100",
+    feature = "stm32f101",
+    feature = "stm32f103",
+    feature = "stm32f105",
+    feature = "stm32f107",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -62,6 +71,10 @@ use crate::gpio::gpioc::*;
 ))]
 use crate::gpio::gpiod::*;
 #[cfg(any(
+    feature = "stm32f100",
+    feature = "stm32f103",
+    feature = "stm32f105",
+    feature = "stm32f107",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -112,6 +125,11 @@ use crate::gpio::gpioh::*;
     feature = "stm32f479"
 ))]
 use crate::gpio::gpioi::*;
+
+#[cfg(feature = "stm32f1")]
+use crate::gpio::{Floating, Input};
+
+#[cfg(feature = "stm32f4")]
 use crate::gpio::Alternate;
 
 #[cfg(any(
@@ -175,6 +193,10 @@ use crate::gpio::AF2;
 use crate::gpio::AF3;
 
 #[cfg(any(
+    feature = "stm32f100",
+    feature = "stm32f103",
+    feature = "stm32f105",
+    feature = "stm32f107",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -193,9 +215,10 @@ use crate::gpio::AF3;
     feature = "stm32f469",
     feature = "stm32f479"
 ))]
-use crate::stm32::{TIM1, TIM5};
+use crate::stm32::TIM1;
 
 #[cfg(any(
+    feature = "stm32f1",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -216,6 +239,33 @@ use crate::stm32::{TIM1, TIM5};
 use crate::stm32::{TIM2, TIM3, TIM4};
 
 #[cfg(any(
+    feature = "stm32f100",
+    feature = "stm32f101",
+    feature = "stm32f103",
+    feature = "stm32f105",
+    feature = "stm32f107",
+    feature = "stm32f401",
+    feature = "stm32f405",
+    feature = "stm32f407",
+    feature = "stm32f410",
+    feature = "stm32f411",
+    feature = "stm32f412",
+    feature = "stm32f413",
+    feature = "stm32f415",
+    feature = "stm32f417",
+    feature = "stm32f423",
+    feature = "stm32f427",
+    feature = "stm32f429",
+    feature = "stm32f437",
+    feature = "stm32f439",
+    feature = "stm32f446",
+    feature = "stm32f469",
+    feature = "stm32f479"
+))]
+use crate::stm32::TIM5;
+
+#[cfg(any(
+    feature = "stm32f103",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -233,7 +283,10 @@ use crate::stm32::{TIM2, TIM3, TIM4};
 ))]
 use crate::stm32::TIM8;
 
-pub trait Pins<TIM> {}
+pub trait Pins<TIM> {
+#[cfg(feature = "stm32f1")]
+    fn remap() {}
+}
 pub trait PinC1<TIM> {}
 pub trait PinC2<TIM> {}
 
@@ -243,6 +296,94 @@ where
     PC2: PinC2<TIM>,
 {
 }
+
+#[cfg(any(
+    feature = "stm32f100",
+    feature = "stm32f103",
+    feature = "stm32f105",
+    feature = "stm32f107"
+))]
+impl Pins<TIM1> for (PA8<Input<Floating>>, PA9<Input<Floating>>) {
+    fn remap() {
+        let afio = unsafe { &(*AFIO::ptr()) };
+        afio.mapr.modify(|_, w| unsafe { w.tim1_remap().bits(0b00) });
+    }
+}
+#[cfg(any(
+    feature = "stm32f100",
+    feature = "stm32f103",
+    feature = "stm32f105",
+    feature = "stm32f107"
+))]
+impl Pins<TIM1> for (PE9<Input<Floating>>, PE11<Input<Floating>>) {
+    fn remap() {
+        let afio = unsafe { &(*AFIO::ptr()) };
+        afio.mapr.modify(|_, w| unsafe { w.tim1_remap().bits(0b11) });
+    }
+}
+
+#[cfg(feature = "stm32f1")]
+impl Pins<TIM2> for (PA0<Input<Floating>>, PA1<Input<Floating>>) {
+    fn remap() {
+        let afio = unsafe { &(*AFIO::ptr()) };
+        afio.mapr.modify(|_, w| unsafe { w.tim2_remap().bits(0b00) });
+    }
+}
+#[cfg(feature = "stm32f1")]
+impl Pins<TIM2> for (PA15<Input<Floating>>, PB3<Input<Floating>>) {
+    fn remap() {
+        let afio = unsafe { &(*AFIO::ptr()) };
+        afio.mapr.modify(|_, w| unsafe { w.tim2_remap().bits(0b11) });
+    }
+}
+
+#[cfg(feature = "stm32f1")]
+impl Pins<TIM3> for (PA6<Input<Floating>>, PA7<Input<Floating>>) {
+    fn remap() {
+        let afio = unsafe { &(*AFIO::ptr()) };
+        afio.mapr.modify(|_, w| unsafe { w.tim3_remap().bits(0b00) });
+    }
+}
+#[cfg(feature = "stm32f1")]
+impl Pins<TIM3> for (PC6<Input<Floating>>, PC7<Input<Floating>>) {
+    fn remap() {
+        let afio = unsafe { &(*AFIO::ptr()) };
+        afio.mapr.modify(|_, w| unsafe { w.tim3_remap().bits(0b11) });
+    }
+}
+
+#[cfg(feature = "stm32f1")]
+impl Pins<TIM4> for (PB6<Input<Floating>>, PB7<Input<Floating>>) {
+    fn remap() {
+        let afio = unsafe { &(*AFIO::ptr()) };
+        afio.mapr.modify(|_, w| w.tim4_remap().clear_bit() );
+    }
+}
+#[cfg(any(
+    feature = "stm32f100",
+    feature = "stm32f101",
+    feature = "stm32f103",
+    feature = "stm32f105",
+    feature = "stm32f107"
+))]
+impl Pins<TIM4> for (PD12<Input<Floating>>, PD13<Input<Floating>>) {
+    fn remap() {
+        let afio = unsafe { &(*AFIO::ptr()) };
+        afio.mapr.modify(|_, w| w.tim4_remap().set_bit() );
+    }
+}
+
+#[cfg(any(
+    feature = "stm32f100",
+    feature = "stm32f101",
+    feature = "stm32f103",
+    feature = "stm32f105",
+    feature = "stm32f107"
+))]
+impl Pins<TIM5> for (PA0<Input<Floating>>, PA1<Input<Floating>>) {}
+
+#[cfg(feature = "stm32f103")]
+impl Pins<TIM8> for (PC6<Input<Floating>>, PC7<Input<Floating>>) {}
 
 #[cfg(any(
     feature = "stm32f401",
@@ -804,6 +945,9 @@ macro_rules! hal {
                     rcc.$apbrstr.modify(|_, w| w.$timXrst().set_bit());
                     rcc.$apbrstr.modify(|_, w| w.$timXrst().clear_bit());
 
+                    #[cfg(feature = "stm32f1")]
+                    PINS::remap();
+
                     // Configure TxC1 and TxC2 as captures
                     tim.ccmr1_output
                         .write(|w| unsafe { w.cc1s().bits(0b01).cc2s().bits(0b01) });
@@ -858,6 +1002,10 @@ macro_rules! hal {
 }
 
 #[cfg(any(
+    feature = "stm32f100",
+    feature = "stm32f103",
+    feature = "stm32f105",
+    feature = "stm32f107",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -878,10 +1026,10 @@ macro_rules! hal {
 ))]
 hal! {
     TIM1: (tim1, tim1en, tim1rst, apb2enr, apb2rstr, u16),
-    TIM5: (tim5, tim5en, tim5rst, apb1enr, apb1rstr, u32),
 }
 
 #[cfg(any(
+    feature = "stm32f1",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -906,6 +1054,35 @@ hal! {
 }
 
 #[cfg(any(
+    feature = "stm32f100",
+    feature = "stm32f101",
+    feature = "stm32f103",
+    feature = "stm32f105",
+    feature = "stm32f107",
+    feature = "stm32f401",
+    feature = "stm32f405",
+    feature = "stm32f407",
+    feature = "stm32f410",
+    feature = "stm32f411",
+    feature = "stm32f412",
+    feature = "stm32f413",
+    feature = "stm32f415",
+    feature = "stm32f417",
+    feature = "stm32f423",
+    feature = "stm32f427",
+    feature = "stm32f429",
+    feature = "stm32f437",
+    feature = "stm32f439",
+    feature = "stm32f446",
+    feature = "stm32f469",
+    feature = "stm32f479"
+))]
+hal! {
+    TIM5: (tim5, tim5en, tim5rst, apb1enr, apb1rstr, u32),
+}
+
+#[cfg(any(
+    feature = "stm32f103",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
