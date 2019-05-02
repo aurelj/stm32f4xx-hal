@@ -9,6 +9,7 @@ use crate::gpio::gpioa::*;
     feature = "stm32f0",
     feature = "stm32f1",
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -32,6 +33,14 @@ use crate::gpio::gpiob::*;
     feature = "stm32f0",
     feature = "stm32f1",
     feature = "stm32f2",
+    // feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -57,6 +66,12 @@ use crate::gpio::gpioc::*;
     feature = "stm32f105",
     feature = "stm32f107",
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -84,6 +99,10 @@ use crate::gpio::gpiod::*;
     feature = "stm32f105",
     feature = "stm32f107",
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -143,6 +162,7 @@ use crate::gpio::{Floating, Input};
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f4"
 ))]
 use crate::gpio::Alternate;
@@ -153,6 +173,7 @@ use crate::gpio::AF0;
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -176,6 +197,15 @@ use crate::gpio::AF1;
 #[cfg(any(
     feature = "stm32f0",
     feature = "stm32f2",
+    // feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -216,12 +246,56 @@ use crate::gpio::AF2;
 use crate::gpio::AF3;
 
 #[cfg(any(
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+use crate::gpio::AF4;
+
+#[cfg(any(
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+use crate::gpio::AF5;
+
+#[cfg(any(
+    // feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    // feature = "stm32f318",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+use crate::gpio::AF6;
+
+#[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398"
+))]
+use crate::gpio::AF10;
+
+#[cfg(any(
     feature = "stm32f0",
     feature = "stm32f100",
     feature = "stm32f103",
     feature = "stm32f105",
     feature = "stm32f107",
     feature = "stm32f2",
+    // feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    // feature = "stm32f318",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -248,6 +322,7 @@ use crate::stm32::TIM1;
     feature = "stm32f0x8",
     feature = "stm32f1",
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -271,6 +346,14 @@ use crate::stm32::TIM2;
     feature = "stm32f0",
     feature = "stm32f1",
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -293,6 +376,12 @@ use crate::stm32::TIM3;
 #[cfg(any(
     feature = "stm32f1",
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -319,6 +408,8 @@ use crate::stm32::TIM4;
     feature = "stm32f105",
     feature = "stm32f107",
     feature = "stm32f2",
+    feature = "stm32f373",
+    feature = "stm32f378",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -342,6 +433,9 @@ use crate::stm32::TIM5;
 #[cfg(any(
     feature = "stm32f103",
     feature = "stm32f2",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
@@ -486,6 +580,18 @@ impl PinC1<TIM1> for PA8<Alternate<AF2>> {}
 ))]
 impl PinC1<TIM1> for PA8<Alternate<AF1>> {}
 
+#[cfg(any(
+    // feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    // feature = "stm32f318",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+impl PinC1<TIM1> for PA8<Alternate<AF6>> {}
+
 #[cfg(feature = "stm32f0")]
 impl PinC2<TIM1> for PA9<Alternate<AF2>> {}
 
@@ -510,6 +616,36 @@ impl PinC2<TIM1> for PA9<Alternate<AF2>> {}
     feature = "stm32f479"
 ))]
 impl PinC2<TIM1> for PA9<Alternate<AF1>> {}
+
+#[cfg(any(
+    // feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    // feature = "stm32f318",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+impl PinC2<TIM1> for PA9<Alternate<AF6>> {}
+
+#[cfg(any(
+    // feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f334",
+    feature = "stm32f398"
+))]
+impl PinC1<TIM1> for PC0<Alternate<AF2>> {}
+
+#[cfg(any(
+    // feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f334",
+    feature = "stm32f398"
+))]
+impl PinC2<TIM1> for PC1<Alternate<AF2>> {}
 
 #[cfg(any(
     feature = "stm32f0x1",
@@ -540,6 +676,14 @@ impl PinC1<TIM1> for PE9<Alternate<AF0>> {}
 impl PinC1<TIM1> for PE9<Alternate<AF1>> {}
 
 #[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+impl PinC1<TIM1> for PE9<Alternate<AF2>> {}
+
+#[cfg(any(
     feature = "stm32f0x1",
     feature = "stm32f0x2",
     feature = "stm32f0x8"
@@ -568,6 +712,14 @@ impl PinC2<TIM1> for PE11<Alternate<AF0>> {}
 impl PinC2<TIM1> for PE11<Alternate<AF1>> {}
 
 #[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+impl PinC2<TIM1> for PE11<Alternate<AF2>> {}
+
+#[cfg(any(
     feature = "stm32f0x1",
     feature = "stm32f0x2",
     feature = "stm32f0x8"
@@ -576,6 +728,7 @@ impl PinC1<TIM2> for PA0<Alternate<AF2>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -604,6 +757,7 @@ impl PinC1<TIM2> for PA5<Alternate<AF2>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -632,6 +786,7 @@ impl PinC1<TIM2> for PA15<Alternate<AF2>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -660,6 +815,7 @@ impl PinC2<TIM2> for PA1<Alternate<AF2>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -688,6 +844,7 @@ impl PinC2<TIM2> for PB3<Alternate<AF2>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -713,11 +870,47 @@ impl PinC1<TIM2> for PB8<Alternate<AF1>> {}
 #[cfg(feature = "stm32f446")]
 impl PinC2<TIM2> for PB9<Alternate<AF1>> {}
 
+#[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+impl PinC1<TIM2> for PD3<Alternate<AF2>> {}
+
+#[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+impl PinC2<TIM2> for PD4<Alternate<AF2>> {}
+
+#[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398"
+))]
+impl PinC2<TIM3> for PA4<Alternate<AF2>> {}
+
 #[cfg(feature = "stm32f0")]
 impl PinC1<TIM3> for PA6<Alternate<AF1>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -742,6 +935,14 @@ impl PinC2<TIM3> for PA7<Alternate<AF1>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -761,11 +962,25 @@ impl PinC2<TIM3> for PA7<Alternate<AF1>> {}
 ))]
 impl PinC2<TIM3> for PA7<Alternate<AF2>> {}
 
+#[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+impl PinC1<TIM3> for PB0<Alternate<AF10>> {}
+
 #[cfg(feature = "stm32f0")]
 impl PinC1<TIM3> for PB4<Alternate<AF1>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -790,6 +1005,14 @@ impl PinC2<TIM3> for PB5<Alternate<AF1>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -814,6 +1037,13 @@ impl PinC1<TIM3> for PC6<Alternate<AF0>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -838,6 +1068,13 @@ impl PinC2<TIM3> for PC7<Alternate<AF0>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -858,6 +1095,22 @@ impl PinC2<TIM3> for PC7<Alternate<AF0>> {}
 impl PinC2<TIM3> for PC7<Alternate<AF2>> {}
 
 #[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+impl PinC1<TIM3> for PE2<Alternate<AF2>> {}
+
+#[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+impl PinC2<TIM3> for PE3<Alternate<AF2>> {}
+
+#[cfg(any(
     feature = "stm32f0x1",
     feature = "stm32f0x2",
     feature = "stm32f0x8"
@@ -872,7 +1125,33 @@ impl PinC1<TIM3> for PE3<Alternate<AF0>> {}
 impl PinC2<TIM3> for PE4<Alternate<AF0>> {}
 
 #[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398"
+))]
+impl PinC1<TIM3> for PA11<Alternate<AF10>> {}
+
+#[cfg(any(
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398"
+))]
+impl PinC2<TIM3> for PA12<Alternate<AF10>> {}
+
+#[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -894,6 +1173,12 @@ impl PinC1<TIM4> for PB6<Alternate<AF2>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -915,6 +1200,12 @@ impl PinC2<TIM4> for PB7<Alternate<AF2>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -936,6 +1227,12 @@ impl PinC1<TIM4> for PD12<Alternate<AF2>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -957,6 +1254,8 @@ impl PinC2<TIM4> for PD13<Alternate<AF2>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f373",
+    feature = "stm32f378",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -979,6 +1278,8 @@ impl PinC1<TIM5> for PA0<Alternate<AF2>> {}
 
 #[cfg(any(
     feature = "stm32f2",
+    feature = "stm32f373",
+    feature = "stm32f378",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -999,8 +1300,32 @@ impl PinC1<TIM5> for PA0<Alternate<AF2>> {}
 ))]
 impl PinC2<TIM5> for PA1<Alternate<AF2>> {}
 
+#[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+impl PinC1<TIM5> for PA8<Alternate<AF2>> {}
+
+#[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+impl PinC2<TIM5> for PA11<Alternate<AF2>> {}
+
 #[cfg(feature = "stm32f410")]
 impl PinC1<TIM5> for PB12<Alternate<AF2>> {}
+
+#[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+impl PinC1<TIM5> for PC0<Alternate<AF2>> {}
+
+#[cfg(any(
+    feature = "stm32f373",
+    feature = "stm32f378"
+))]
+impl PinC2<TIM5> for PC1<Alternate<AF2>> {}
 
 #[cfg(any(
     feature = "stm32f412",
@@ -1047,6 +1372,34 @@ impl PinC1<TIM5> for PH10<Alternate<AF2>> {}
 impl PinC2<TIM5> for PH11<Alternate<AF2>> {}
 
 #[cfg(any(
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+impl PinC2<TIM8> for PA14<Alternate<AF5>> {}
+
+#[cfg(any(
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+impl PinC1<TIM8> for PA15<Alternate<AF2>> {}
+
+#[cfg(any(
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+impl PinC1<TIM8> for PB6<Alternate<AF5>> {}
+
+#[cfg(any(
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+impl PinC2<TIM8> for PB8<Alternate<AF10>> {}
+
+#[cfg(any(
     feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1066,6 +1419,13 @@ impl PinC2<TIM5> for PH11<Alternate<AF2>> {}
 impl PinC1<TIM8> for PC6<Alternate<AF3>> {}
 
 #[cfg(any(
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+impl PinC1<TIM8> for PC6<Alternate<AF4>> {}
+
+#[cfg(any(
     feature = "stm32f2",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1083,6 +1443,13 @@ impl PinC1<TIM8> for PC6<Alternate<AF3>> {}
     feature = "stm32f479"
 ))]
 impl PinC2<TIM8> for PC7<Alternate<AF3>> {}
+
+#[cfg(any(
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398"
+))]
+impl PinC1<TIM8> for PC7<Alternate<AF4>> {}
 
 #[cfg(any(
     feature = "stm32f2",
@@ -1198,6 +1565,14 @@ macro_rules! hal {
     feature = "stm32f105",
     feature = "stm32f107",
     feature = "stm32f2",
+    // feature = "stm32f301",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    // feature = "stm32f318",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1226,6 +1601,7 @@ hal! {
     feature = "stm32f0x8",
     feature = "stm32f1",
     feature = "stm32f2",
+    feature = "stm32f3",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1251,6 +1627,14 @@ hal! {
     feature = "stm32f0",
     feature = "stm32f1",
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f328",
+    feature = "stm32f334",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1275,6 +1659,12 @@ hal! {
 #[cfg(any(
     feature = "stm32f1",
     feature = "stm32f2",
+    feature = "stm32f302",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f373",
+    feature = "stm32f378",
+    feature = "stm32f398",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1303,6 +1693,8 @@ hal! {
     feature = "stm32f105",
     feature = "stm32f107",
     feature = "stm32f2",
+    feature = "stm32f373",
+    feature = "stm32f378",
     feature = "stm32f401",
     feature = "stm32f405",
     feature = "stm32f407",
@@ -1328,6 +1720,9 @@ hal! {
 #[cfg(any(
     feature = "stm32f103",
     feature = "stm32f2",
+    feature = "stm32f303",
+    feature = "stm32f358",
+    feature = "stm32f398",
     feature = "stm32f405",
     feature = "stm32f407",
     feature = "stm32f412",
